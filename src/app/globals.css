@@ -14,6 +14,28 @@
   --color-border:       #1e1e2a;
 }
 
+:root {
+  --background: #0d0d12;
+  --foreground: #e4e4ef;
+  --card: #16161f;
+  --card-foreground: #e4e4ef;
+  --popover: #16161f;
+  --popover-foreground: #e4e4ef;
+  --primary: #3e00e3;
+  --primary-foreground: #ffffff;
+  --secondary: #1e1e2a;
+  --secondary-foreground: #c8cdd6;
+  --muted: #1e1e2a;
+  --muted-foreground: #7c8494;
+  --accent: #5214ff;
+  --accent-foreground: #ffffff;
+  --destructive: #e03535;
+  --border: #1e1e2a;
+  --input: #1e1e2a;
+  --ring: #5214ff;
+  --radius: 0.5rem;
+}
+
 body {
   background: var(--color-bg);
   color: #e4e4ef;
