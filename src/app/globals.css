@@ -1,0 +1,20 @@
+@import "tailwindcss";
+
+@theme inline {
+  --font-sans: var(--font-geist);
+
+  --color-purple:       #3e00e3;
+  --color-purple-light: #5214ff;
+
+  --color-silver:       #c8cdd6;
+  --color-silver-dim:   #7c8494;
+
+  --color-bg:           #0d0d12;
+  --color-bg-card:      #16161f;
+  --color-border:       #1e1e2a;
+}
+
+body {
+  background: var(--color-bg);
+  color: #e4e4ef;
+}
