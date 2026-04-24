@@ -16,6 +16,15 @@ export type Game = {
   averageScore: number | null;
 };
 
+export type GameDetail = Game & {
+  description: string;
+  platforms: string[];
+  developers: string[];
+  publishers: string[];
+  playtime: number | null;
+  website: string | null;
+};
+
 export type Review = {
   id: string;
   userId: string;
