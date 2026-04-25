@@ -1,0 +1,16 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: platinum_db
+    env_file: .env
+    environment:
+      POSTGRES_USER: ${DB_USER:-platinum}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-platinum}
+      POSTGRES_DB: ${DB_NAME:-platinum}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
