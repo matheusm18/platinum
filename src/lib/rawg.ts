@@ -34,6 +34,8 @@ type RawgListResponse = {
   results: RawgGame[];
 };
 
+export type Genre = { slug: string; name: string };
+
 function toGame(raw: RawgGame): Game {
   return {
     id: String(raw.id),
@@ -72,13 +74,35 @@ export async function fetchGame(slug: string): Promise<GameDetail> {
   };
 }
 
-export async function fetchGames(query?: string): Promise<Game[]> {
+const PAGE_SIZE = 20;
+
+export async function fetchGenres(): Promise<Genre[]> {
+  const params = new URLSearchParams({ key: API_KEY! });
+  const res = await fetch(`${BASE_URL}/genres?${params}`, {
+    next: { revalidate: 3600 * 24 },
+  });
+  if (!res.ok) throw new Error(`RAWG API error: ${res.status}`);
+  const data: { results: { slug: string; name: string }[] } = await res.json();
+  return data.results.map(({ slug, name }) => ({ slug, name }));
+}
+
+export async function fetchGames(
+  query?: string,
+  page = 1,
+  genre?: string,
+  ordering = "-added"
+): Promise<{ games: Game[]; total: number; totalPages: number }> {
   const params = new URLSearchParams({
     key: API_KEY!,
-    page_size: "40",
-    ordering: "-metacritic",
-    metacritic: "1,100",
-    ...(query && { search: query }),
+    page_size: String(PAGE_SIZE),
+    page: String(page),
+    ...(query
+      ? { search: query, search_precise: "true" }
+      : {
+          ordering,
+          metacritic: "1,100",
+          ...(genre && { genres: genre }),
+        }),
   });
 
   const res = await fetch(`${BASE_URL}/games?${params}`, {
@@ -88,5 +112,9 @@ export async function fetchGames(query?: string): Promise<Game[]> {
   if (!res.ok) throw new Error(`RAWG API error: ${res.status}`);
 
   const data: RawgListResponse = await res.json();
-  return data.results.map(toGame);
+  return {
+    games: data.results.map(toGame),
+    total: data.count,
+    totalPages: Math.ceil(data.count / PAGE_SIZE),
+  };
 }
