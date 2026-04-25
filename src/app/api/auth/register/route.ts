@@ -36,12 +36,8 @@ export async function POST(request: Request) {
       .where(or(eq(users.email, normalizedEmail), eq(users.username, normalizedUsername)))
       .limit(1);
 
-    if (existing?.email === normalizedEmail) {
-      return NextResponse.json({ error: "Email já está em uso" }, { status: 409 });
-    }
-
-    if (existing?.username === normalizedUsername) {
-      return NextResponse.json({ error: "Username já está em uso" }, { status: 409 });
+    if (existing) {
+      return NextResponse.json({ error: "Email ou username já está em uso" }, { status: 409 });
     }
 
     const passwordHash = await bcrypt.hash(String(password), 10);
@@ -49,7 +45,7 @@ export async function POST(request: Request) {
     const [user] = await db
       .insert(users)
       .values({ username: normalizedUsername, email: normalizedEmail, passwordHash })
-      .returning({ id: users.id, username: users.username, email: users.email });
+      .returning({ id: users.id, username: users.username });
 
     return NextResponse.json(user, { status: 201 });
   } catch {
