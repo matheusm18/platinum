@@ -9,6 +9,7 @@ import { users, reviews, favorites } from "@/db/schema";
 import { fetchGame } from "@/lib/rawg";
 import { UserAvatar } from "@/components/UserAvatar";
 import { Button } from "@/components/ui/button";
+import { ScoreBadge } from "@/components/ui/ScoreBadge";
 import { SlotPicker, type Slot } from "@/components/SlotPicker";
 import { updateFavorite, searchGamesAction } from "@/lib/actions/favorites";
 
@@ -33,7 +34,7 @@ export default async function ProfilePage({ params }: Props) {
   if (!user) notFound();
 
   const [userReviews, userFavorites] = await Promise.all([
-    db.select().from(reviews).where(eq(reviews.userId, user.id)).orderBy(desc(reviews.createdAt)).limit(20),
+    db.select().from(reviews).where(eq(reviews.userId, user.id)).orderBy(desc(reviews.updatedAt)).limit(20),
     db.select().from(favorites).where(eq(favorites.userId, user.id)).orderBy(asc(favorites.rank)),
   ]);
 
@@ -140,7 +141,7 @@ export default async function ProfilePage({ params }: Props) {
                         >
                           {game?.title ?? review.gameSlug}
                         </Link>
-                        <ScoreBadge score={review.score} />
+                        <ScoreBadge score={review.score * 10} normalized={true} className="shrink-0 text-lg font-mono font-bold px-2 py-0.5 rounded"/>
                       </div>
 
                       {review.content && (
@@ -163,18 +164,5 @@ export default async function ProfilePage({ params }: Props) {
         )}
       </section>
     </div>
-  );
-}
-
-function ScoreBadge({ score }: { score: number }) {
-  const color =
-    score >= 90 ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20" :
-    score >= 75 ? "bg-yellow-500/10 text-yellow-400 border-yellow-500/20" :
-    score >= 50 ? "bg-orange-500/10 text-orange-400 border-orange-500/20" :
-                  "bg-red-500/10 text-red-400 border-red-500/20";
-  return (
-    <span className={`shrink-0 text-lg font-bold px-2 py-0.5 rounded border ${color}`}>
-      {score}
-    </span>
   );
 }

@@ -18,6 +18,7 @@ export const reviews = pgTable("reviews", {
   score:     integer("score").notNull(),
   content:   text("content"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
 }, (table) => [
   unique().on(table.userId, table.gameSlug),
 ]);

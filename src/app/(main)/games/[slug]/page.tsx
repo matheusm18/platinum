@@ -2,6 +2,13 @@ import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { fetchGame } from "@/lib/rawg";
 import type { Metadata } from "next";
+import { auth } from "@/auth";
+import { db } from "@/db";
+import { reviews } from "@/db/schema";
+import { and, eq } from "drizzle-orm";
+import { RateForm } from "@/components/RateForm";
+import { saveReview, deleteReview } from "@/lib/actions/reviews";
+import { ScoreBadge } from "@/components/ui/ScoreBadge";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -19,7 +26,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function GamePage({ params }: Props) {
   const { slug } = await params;
 
-  const game = await fetchGame(slug);
+  const [game, session] = await Promise.all([fetchGame(slug), auth()]);
+
+  const existingReview = session?.user?.id
+    ? await db.select().from(reviews).where(and(eq(reviews.userId, session.user.id), eq(reviews.gameSlug, slug))).limit(1).then((r) => r[0] ?? null)
+    : null;
+
+  const boundSaveReview = saveReview.bind(null, slug);
+  const boundDeleteReview = deleteReview.bind(null, slug);
 
   return (
     <div>
@@ -38,7 +52,12 @@ export default async function GamePage({ params }: Props) {
         <div className="absolute bottom-0 left-0 right-0 max-w-5xl mx-auto px-4 pb-6 flex items-end justify-between">
           <div>
             <h1 className="text-4xl font-bold text-white">{game.title}</h1>
-            <p className="mt-1 text-silver-dim">{game.releaseYear}</p>
+            <p className="mt-2 text-silver-dim">{game.releaseYear}</p>
+            <div className="flex flex-wrap mt-2 gap-2">
+              {game.genres.map((genre) => (
+                <Badge key={genre}>{genre}</Badge>
+              ))}
+            </div>
           </div>
           {game.averageScore !== null && (
             <ScoreCircle score={game.averageScore} />
@@ -47,11 +66,6 @@ export default async function GamePage({ params }: Props) {
       </div>
 
       <div className="max-w-5xl mx-auto px-4 py-8 space-y-8">
-        <div className="flex flex-wrap gap-2">
-          {game.genres.map((genre) => (
-            <Badge key={genre}>{genre}</Badge>
-          ))}
-        </div>
 
         {game.description && (
           <div>
@@ -71,22 +85,22 @@ export default async function GamePage({ params }: Props) {
             <MetaItem label="Tempo médio" values={[`${game.playtime}h`]} />
           ) : null}
         </div>
+
+        {session?.user && (
+          <RateForm
+            onSave={boundSaveReview}
+            onDelete={existingReview ? boundDeleteReview : undefined}
+            existingScore={existingReview ? existingReview.score / 2 : null}
+            existingContent={existingReview?.content}
+          />
+        )}
       </div>
     </div>
   );
 }
 
 function ScoreCircle({ score }: { score: number }) {
-  const color =
-    score >= 90 ? "border-emerald-500 text-emerald-400" :
-    score >= 75 ? "border-yellow-500 text-yellow-400" :
-                  "border-red-500 text-red-400";
-
-  return (
-    <div className={`w-16 h-16 rounded-full border-4 ${color} flex items-center justify-center`}>
-      <span className="text-xl font-bold">{score}</span>
-    </div>
-  );
+  return <ScoreBadge score={score} className="w-16 h-16 rounded-full text-xl px-0 py-0" />;
 }
 
 function MetaItem({ label, values }: { label: string; values: string[] }) {

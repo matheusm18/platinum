@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
+import { ScoreBadge } from "@/components/ui/ScoreBadge";
 import type { Game } from "@/types";
 
 type Props = {
@@ -30,7 +31,7 @@ export function GameCard({ game }: Props) {
           )}
           {game.averageScore !== null && (
             <div className="absolute top-2 right-2">
-              <ScoreBadge score={game.averageScore} />
+              <ScoreBadge score={game.averageScore} className="font-mono font-bold px-2 py-0.5 rounded" />
             </div>
           )}
         </div>
@@ -50,18 +51,5 @@ export function GameCard({ game }: Props) {
         </div>
       </div>
     </Link>
-  );
-}
-
-function ScoreBadge({ score }: { score: number }) {
-  const color =
-    score >= 90 ? "bg-emerald-500" :
-    score >= 75 ? "bg-yellow-500" :
-                  "bg-red-500";
-
-  return (
-    <span className={`${color} text-white font-mono font-bold px-2 py-0.5 rounded`}>
-      {score}
-    </span>
   );
 }
