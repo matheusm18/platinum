@@ -38,9 +38,14 @@ export function Hero({ session }: HeroProps) {
         </p>
 
         {session ? (
-          <Button size="lg" asChild>
-            <Link href="/games">Ir para jogos</Link>
-          </Button>
+          <div className="flex items-center justify-center gap-3 flex-wrap">
+            <Button size="lg" asChild>
+              <Link href="/games">Games</Link>
+            </Button>
+            <Button size="lg" asChild>
+              <Link href="/users">Users</Link>
+            </Button>
+          </div>
         ) : (
           <div className="flex items-center justify-center gap-3 flex-wrap">
             <Button size="lg" asChild>

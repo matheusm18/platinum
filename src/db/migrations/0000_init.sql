@@ -24,6 +24,7 @@ CREATE TABLE "users" (
 	"email" varchar(255) NOT NULL,
 	"password_hash" text NOT NULL,
 	"avatar_url" text,
+	"bio" varchar(150),
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	CONSTRAINT "users_username_unique" UNIQUE("username"),
 	CONSTRAINT "users_email_unique" UNIQUE("email")

@@ -21,6 +21,13 @@ export async function Navbar() {
 
         <div className="flex items-center gap-1">
           <Link
+            href="/users"
+            className="px-3 py-1.5 text-sm text-silver-dim hover:text-silver transition-colors rounded-md hover:bg-bg-card"
+          >
+            Users
+          </Link>
+
+          <Link
             href="/games"
             className="px-3 py-1.5 text-sm text-silver-dim hover:text-silver transition-colors rounded-md hover:bg-bg-card"
           >
@@ -32,7 +39,7 @@ export async function Navbar() {
           {session ? (
             <>
               <Link
-                href={`/profile/${session.user?.name}`}
+                href={`/users/${session.user?.name}`}
                 className="px-5 py-1.5 text-sm text-silver-dim hover:text-silver transition-colors rounded-md hover:bg-bg-card"
               >
                 {session.user?.name}

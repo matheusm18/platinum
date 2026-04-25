@@ -4,6 +4,7 @@ import { useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { Camera } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { UserAvatar } from "@/components/UserAvatar";
 
 interface Props {
   username: string;
@@ -41,18 +42,9 @@ export function EditAvatarForm({ username, avatarUrl }: Props) {
     });
   }
 
-  const src = preview ?? avatarUrl;
-
   return (
     <div className="flex items-center gap-5">
-      <div className="w-20 h-20 rounded-full bg-purple/10 border border-purple/20 overflow-hidden flex items-center justify-center shrink-0 select-none">
-        {src ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={src} alt={username} className="w-full h-full object-cover" />
-        ) : (
-          <span className="text-2xl font-bold text-purple-light">{username[0].toUpperCase()}</span>
-        )}
-      </div>
+      <UserAvatar username={username} avatarUrl={preview ?? avatarUrl} />
 
       <div>
         <Button

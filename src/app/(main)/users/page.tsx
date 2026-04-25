@@ -1,7 +1,6 @@
-import { GameCard } from "@/components/GameCard";
-import { GameFilters } from "@/components/GameFilters";
+import { UserCard } from "@/components/UserCard";
 import { SearchInput } from "@/components/SearchInput";
-import { fetchGames, fetchGenres } from "@/lib/rawg";
+import { fetchUsers } from "@/lib/actions/fetch_users";
 import {
   Pagination,
   PaginationContent,
@@ -12,26 +11,23 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 
-export default async function GamesPage({
+export default async function UsersPage({
   searchParams,
 }: {
-  searchParams: Promise<{ q?: string; page?: string; genre?: string; ordering?: string }>;
+  searchParams: Promise<{ q?: string; page?: string }>;
 }) {
-  const { q, page: pageParam, genre, ordering } = await searchParams;
+  const { q, page: pageParam } = await searchParams;
   const page = Math.max(1, Number(pageParam) || 1);
 
-  const [{ games, total, totalPages }, genres] = await Promise.all([
-    fetchGames(q, page, genre, ordering),
-    fetchGenres(),
+  const [{ users, total, totalPages }] = await Promise.all([
+    fetchUsers(q, page),
   ]);
 
   function pageHref(p: number) {
     const params = new URLSearchParams();
     if (q) params.set("q", q);
-    if (genre) params.set("genre", genre);
-    if (ordering) params.set("ordering", ordering);
     params.set("page", String(p));
-    return `/games?${params}`;
+    return `/users?${params}`;
   }
 
   const pages = buildPageNumbers(page, totalPages);
@@ -39,27 +35,19 @@ export default async function GamesPage({
   return (
     <div className="max-w-5xl mx-auto px-4 py-12">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-silver">Games</h1>
+        <h1 className="text-3xl font-bold text-silver">Users</h1>
         <p className="mt-1 text-silver-dim">
-          {q
-            ? `Top ${games.length} resultados para "${q}"`
-            : `${total.toLocaleString("pt-BR")} jogos encontrados`}
+          {total.toLocaleString("pt-BR")} perfis encontrados
         </p>
       </div>
 
       <div className="mb-4">
-        <SearchInput placeholder="Buscar jogos..." />
+        <SearchInput placeholder="Buscar utilizadores..." />
       </div>
 
-      {!q && (
-        <div className="mb-6">
-          <GameFilters genres={genres} />
-        </div>
-      )}
-
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {games.map((game) => (
-          <GameCard key={game.id} game={game} />
+        {users.map((user) => (
+          <UserCard key={user.id} user={user} />
         ))}
       </div>
 
