@@ -1,17 +1,21 @@
 import { NextRequest, NextResponse } from "next/server";
-import { writeFile, unlink, mkdir } from "fs/promises";
-import path from "path";
 import { auth } from "@/auth";
 import { db } from "@/db";
 import { users } from "@/db/schema";
 import { eq } from "drizzle-orm";
-
 import sharp from "sharp";
-const ALLOWED_TYPES = [
-  "image/jpeg",
-  "image/png",
-  "image/webp",
-] as const;
+import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+
+const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp"] as const;
+
+const r2 = new S3Client({
+  region: "auto",
+  endpoint: `https://${process.env.R2_ACCOUNT_ID}.r2.cloudflarestorage.com`,
+  credentials: {
+    accessKeyId: process.env.R2_ACCESS_KEY_ID!,
+    secretAccessKey: process.env.R2_SECRET_ACCESS_KEY!,
+  },
+});
 
 export async function POST(request: NextRequest) {
   const session = await auth();
@@ -46,28 +50,32 @@ export async function POST(request: NextRequest) {
   }
 
   const userId = session.user.id;
-  const uploadsDir = path.join(process.cwd(), "public", "uploads", "avatars");
-  const userDir = path.join(uploadsDir, userId);
-  await mkdir(userDir, { recursive: true });
 
-  for (const oldExt of ["jpg", "png", "webp"] as const) {
-    try {
-      await unlink(path.join(uploadsDir, `${userId}.${oldExt}`));
-    } catch {
-    }
-
-    try {
-      await unlink(path.join(userDir, `avatar.${oldExt}`));
-    } catch {
+  const [user] = await db.select({ avatarUpdatedAt: users.avatarUpdatedAt }).from(users).where(eq(users.id, userId));
+  if (user?.avatarUpdatedAt) {
+    const secondsSinceLastUpload = (Date.now() - user.avatarUpdatedAt.getTime()) / 1000;
+    if (secondsSinceLastUpload < 60) {
+      const retryAfter = Math.ceil(60 - secondsSinceLastUpload);
+      return NextResponse.json(
+        { error: `Aguarda ${retryAfter}s antes de atualizar o avatar novamente` },
+        { status: 429, headers: { "Retry-After": String(retryAfter) } }
+      );
     }
   }
 
-  const filename = "avatar.webp";
-  await writeFile(path.join(userDir, filename), outputBuffer);
+  const key = `avatars/${userId}/avatar.webp`;
 
-  const avatarUrl = `/uploads/avatars/${userId}/${filename}?v=${Date.now()}`;
+  await r2.send(new PutObjectCommand({
+    Bucket: process.env.R2_BUCKET_NAME!,
+    Key: key,
+    Body: outputBuffer,
+    ContentType: "image/webp",
+  }));
 
-  await db.update(users).set({ avatarUrl }).where(eq(users.id, userId));
+  // cache bust via query string para forçar reload após atualização
+  const avatarUrl = `${process.env.R2_PUBLIC_URL}/${key}?v=${Date.now()}`;
+
+  await db.update(users).set({ avatarUrl, avatarUpdatedAt: new Date() }).where(eq(users.id, userId));
 
   return NextResponse.json({ avatarUrl });
 }

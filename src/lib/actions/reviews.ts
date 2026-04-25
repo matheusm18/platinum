@@ -12,6 +12,8 @@ export async function saveReview(gameSlug: string, score: number, content: strin
   if (!session?.user?.id) redirect("/login");
 
   const dbScore = Math.round(score * 2);
+  if (!Number.isFinite(score) || dbScore < 1 || dbScore > 10) return { success: false };
+  if (typeof content !== "string" || content.length > 2000) return { success: false };
 
   await db
     .insert(reviews)

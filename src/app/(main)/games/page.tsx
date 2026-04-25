@@ -17,8 +17,10 @@ export default async function GamesPage({
 }: {
   searchParams: Promise<{ q?: string; page?: string; genre?: string; ordering?: string }>;
 }) {
-  const { q, page: pageParam, genre, ordering } = await searchParams;
+  const { q, page: pageParam, genre, ordering: rawOrdering } = await searchParams;
   const page = Math.max(1, Number(pageParam) || 1);
+  const VALID_ORDERINGS = ["-added", "-rating", "-released", "name", "-metacritic"];
+  const ordering = VALID_ORDERINGS.includes(rawOrdering ?? "") ? rawOrdering : undefined;
 
   const [{ games, total, totalPages }, genres] = await Promise.all([
     fetchGames(q, page, genre, ordering),

@@ -26,7 +26,13 @@ export default async function ProfilePage({ params }: Props) {
   const isOwner = session?.user?.name === username;
 
   const [user] = await db
-    .select()
+    .select({
+      id: users.id,
+      username: users.username,
+      avatarUrl: users.avatarUrl,
+      bio: users.bio,
+      createdAt: users.createdAt,
+    })
     .from(users)
     .where(eq(users.username, username))
     .limit(1);

@@ -2,7 +2,7 @@
 
 import { auth } from "@/auth";
 import { db } from "@/db";
-import { favorites } from "@/db/schema";
+import { favorites, users } from "@/db/schema";
 import { and, eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
@@ -11,6 +11,9 @@ import { fetchGames } from "@/lib/rawg";
 export async function updateFavorite(rank: number, gameSlug: string | null) {
   const session = await auth();
   if (!session?.user?.id) redirect("/login");
+
+  if (!Number.isInteger(rank) || rank < 1 || rank > 5) return;
+  if (gameSlug !== null && !/^[a-z0-9-]{1,255}$/.test(gameSlug)) return;
 
   if (gameSlug === null) {
     await db
@@ -26,7 +29,8 @@ export async function updateFavorite(rank: number, gameSlug: string | null) {
       });
   }
 
-  revalidatePath(`/users/${session.user.name}`); // serve pra forçar atualizacao
+  const [currentUser] = await db.select({ username: users.username }).from(users).where(eq(users.id, session.user.id));
+  if (currentUser) revalidatePath(`/users/${currentUser.username}`);
 }
 
 export async function searchGamesAction(query: string) {

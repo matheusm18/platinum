@@ -5,7 +5,11 @@ import { users } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import bcrypt from "bcryptjs";
 
+// pre-computed hash used for constant-time comparison when user doesn't exist
+const DUMMY_HASH = "$2b$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi";
+
 export const { handlers, signIn, signOut, auth } = NextAuth({
+  trustHost: true,
   providers: [
     Credentials({
       credentials: {
@@ -21,14 +25,12 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           .where(eq(users.email, credentials.email as string))
           .limit(1);
 
-        if (!user) return null;
-
         const passwordMatch = await bcrypt.compare(
           credentials.password as string,
-          user.passwordHash
+          user?.passwordHash ?? DUMMY_HASH
         );
 
-        if (!passwordMatch) return null;
+        if (!user || !passwordMatch) return null;
 
         return { id: user.id, name: user.username, email: user.email };
       },
