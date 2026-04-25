@@ -7,6 +7,29 @@ import { eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
 
 export type UsernameState = { error: string | null };
+export type BioState = { error: string | null };
+
+export async function updateBio(
+  _prev: BioState,
+  formData: FormData
+): Promise<BioState> {
+  const session = await auth();
+  if (!session?.user?.id) redirect("/login");
+
+  const bio = ((formData.get("bio") as string) ?? "").trim();
+
+  if (bio.length > 150) {
+    return { error: "A bio não pode ter mais de 150 caracteres." };
+  }
+
+  try {
+    await db.update(users).set({ bio: bio || null }).where(eq(users.id, session.user.id));
+  } catch {
+    return { error: "Erro ao guardar bio." };
+  }
+
+  redirect(`/users/${session.user.name}`);
+}
 
 export async function updateUsername(
   _prev: UsernameState,

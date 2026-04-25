@@ -6,6 +6,7 @@ import { auth } from "@/auth";
 import { db } from "@/db";
 import { users } from "@/db/schema";
 import { EditAvatarForm } from "@/components/profile/edit-avatar-form";
+import { EditBioForm } from "@/components/profile/edit-bio-form";
 import { EditUsernameForm } from "@/components/profile/edit-username-form";
 
 type Props = { params: Promise<{ username: string }> };
@@ -24,7 +25,7 @@ export default async function EditProfilePage({ params }: Props) {
   }
 
   const [user] = await db
-    .select({ id: users.id, username: users.username, avatarUrl: users.avatarUrl })
+    .select({ id: users.id, username: users.username, avatarUrl: users.avatarUrl, bio: users.bio })
     .from(users)
     .where(eq(users.username, username))
     .limit(1);
@@ -34,13 +35,13 @@ export default async function EditProfilePage({ params }: Props) {
   }
 
   if (user.id !== session.user.id) {
-    redirect(`/profile/${username}`);
+    redirect(`/users/${username}`);
   }
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-12 space-y-8">
       <div>
-        <Link href={`/profile/${user.username}`} className="text-sm text-silver-dim hover:text-silver transition-colors underline">
+        <Link href={`/users/${user.username}`} className="text-sm text-silver-dim hover:text-silver transition-colors underline">
             Voltar ao perfil
         </Link>
         <h1 className="text-2xl font-bold text-white mt-2">Editar perfil</h1>
@@ -49,6 +50,11 @@ export default async function EditProfilePage({ params }: Props) {
       <section className="rounded-xl border border-border bg-bg-card p-6 space-y-4">
         <h2 className="text-sm font-semibold text-silver uppercase tracking-widest">Foto de perfil</h2>
         <EditAvatarForm username={user.username} avatarUrl={user.avatarUrl} />
+      </section>
+
+      <section className="rounded-xl border border-border bg-bg-card p-6 space-y-4">
+        <h2 className="text-sm font-semibold text-silver uppercase tracking-widest">Bio</h2>
+        <EditBioForm bio={user.bio} />
       </section>
 
       <section className="rounded-xl border border-border bg-bg-card p-6 space-y-4">

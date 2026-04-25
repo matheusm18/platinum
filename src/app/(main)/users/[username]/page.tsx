@@ -7,7 +7,7 @@ import { auth } from "@/auth";
 import { db } from "@/db";
 import { users, reviews, favorites } from "@/db/schema";
 import { fetchGame } from "@/lib/rawg";
-import { AvatarUpload } from "@/components/profile/avatar-upload";
+import { UserAvatar } from "@/components/UserAvatar";
 import { Button } from "@/components/ui/button";
 
 type Props = { params: Promise<{ username: string }> };
@@ -58,13 +58,14 @@ export default async function ProfilePage({ params }: Props) {
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-12">
-      <div className="flex items-center gap-6 mb-12">
-        <AvatarUpload username={user.username} avatarUrl={user.avatarUrl} />
+      <div className="flex items-start gap-6 mb-12">
+        <UserAvatar username={user.username} avatarUrl={user.avatarUrl} />
 
         <div className="flex-1 flex items-start justify-between">
           <div>
             <h1 className="text-2xl font-bold text-white">@{user.username}</h1>
             <p className="text-silver-dim text-sm mt-1">Membro desde {joinedDate}</p>
+            {user.bio && <p className="text-silver text-sm mt-1 max-w-sm">{user.bio}</p>}
             <div className="flex gap-6 mt-3">
               <div>
                 <span className="font-semibold text-white">{userReviews.length}</span>
@@ -79,7 +80,7 @@ export default async function ProfilePage({ params }: Props) {
           <div>
             {isOwner && (
               <Button asChild size="sm" variant="outline" className="mt-3 border-border bg-bg-card hover:bg-bg">
-                <Link href={`/profile/${user.username}/edit`}>Editar perfil</Link>
+                <Link href={`/users/${user.username}/edit`}>Editar perfil</Link>
               </Button>
             )}
           </div>

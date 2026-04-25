@@ -1,8 +1,12 @@
-export type User = {
+export type UserPublic = {
   id: string;
   username: string;
-  email: string;
   avatarUrl: string | null;
+  bio: string | null;
+};
+
+export type User = UserPublic & {
+  email: string;
   createdAt: Date;
 };
 
