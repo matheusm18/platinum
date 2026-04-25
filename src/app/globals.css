@@ -1,17 +1,52 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:is(.dark *));
+
 @theme inline {
   --font-sans: var(--font-geist);
 
-  --color-purple:       #3e00e3;
+  --color-purple: #3e00e3;
   --color-purple-light: #5214ff;
+  --color-silver: #c8cdd6;
+  --color-silver-dim: #7c8494;
+  --color-bg: #0d0d12;
+  --color-bg-card: #16161f;
+  --color-border: #1e1e2a;
 
-  --color-silver:       #c8cdd6;
-  --color-silver-dim:   #7c8494;
+  --color-background: #0d0d12;
+  --color-foreground: #e4e4ef;
+  --color-card: #16161f;
+  --color-card-foreground: #e4e4ef;
+  --color-primary: #3e00e3;
+  --color-primary-foreground: #ffffff;
+  --color-secondary: #1e1e2a;
+  --color-secondary-foreground: #c8cdd6;
+  --color-muted: #1e1e2a;
+  --color-muted-foreground: #7c8494;
+  --color-accent: #5214ff;
+  --color-accent-foreground: #ffffff;
+  --color-destructive: #e03535;
+  --color-input: #1e1e2a;
+  --color-ring: #5214ff;
 
-  --color-bg:           #0d0d12;
-  --color-bg-card:      #16161f;
-  --color-border:       #1e1e2a;
+  --shadow-logo-glow: 0 0 0 1px rgba(82, 20, 255, 0.18), 
+                      0 8px 24px rgba(0, 0, 0, 0.4), 
+                      0 20px 56px rgba(62, 0, 227, 0.3);
+  
+  --bg-grid-pattern: linear-gradient(rgba(62, 0, 227, 0.055) 1px, transparent 1px),
+                     linear-gradient(90deg, rgba(62, 0, 227, 0.055) 1px, transparent 1px);
+
+  --animate-ripple: ripple var(--duration, 2s) ease calc(var(--i, 0) * 0.2s) infinite;
+
+  @keyframes ripple {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); }
+    50% { transform: translate(-50%, -50%) scale(0.9); }
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(14px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
 }
 
 :root {
@@ -19,24 +54,23 @@
   --foreground: #e4e4ef;
   --card: #16161f;
   --card-foreground: #e4e4ef;
-  --popover: #16161f;
-  --popover-foreground: #e4e4ef;
   --primary: #3e00e3;
-  --primary-foreground: #ffffff;
-  --secondary: #1e1e2a;
-  --secondary-foreground: #c8cdd6;
-  --muted: #1e1e2a;
   --muted-foreground: #7c8494;
   --accent: #5214ff;
-  --accent-foreground: #ffffff;
-  --destructive: #e03535;
   --border: #1e1e2a;
-  --input: #1e1e2a;
-  --ring: #5214ff;
-  --radius: 0.5rem;
 }
 
 body {
   background: var(--color-bg);
-  color: #e4e4ef;
+  color: var(--foreground);
+}
+
+@layer utilities {
+  .bg-grid-main {
+    background-image: var(--bg-grid-pattern);
+    background-size: 48px 48px;
+  }
+  .form-enter {
+    animation: fadeUp 0.45s ease-out forwards;
+  }
 }
