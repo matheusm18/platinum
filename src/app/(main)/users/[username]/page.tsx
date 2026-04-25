@@ -9,6 +9,8 @@ import { users, reviews, favorites } from "@/db/schema";
 import { fetchGame } from "@/lib/rawg";
 import { UserAvatar } from "@/components/UserAvatar";
 import { Button } from "@/components/ui/button";
+import { SlotPicker, type Slot } from "@/components/SlotPicker";
+import { updateFavorite, searchGamesAction } from "@/lib/actions/favorites";
 
 type Props = { params: Promise<{ username: string }> };
 
@@ -54,6 +56,18 @@ export default async function ProfilePage({ params }: Props) {
     gameEntries.filter((e): e is [string, { title: string; coverUrl: string }] => e[1] !== null)
   );
 
+  const favoriteSlots: Slot[] = Array.from({ length: 5 }, (_, i) => {
+    const rank = i + 1;
+    const fav = userFavorites.find((f) => f.rank === rank);
+    const game = fav ? gameMap.get(fav.gameSlug) : undefined;
+    return {
+      rank,
+      slug: fav?.gameSlug ?? null,
+      title: game?.title ?? null,
+      coverUrl: game?.coverUrl ?? null,
+    };
+  });
+
   const joinedDate = user.createdAt.toLocaleDateString("pt-PT", { month: "long", year: "numeric" });
 
   return (
@@ -87,36 +101,14 @@ export default async function ProfilePage({ params }: Props) {
         </div>
       </div>
 
-      <section className="mb-12">
-        <h2 className="text-xs font-semibold text-silver-dim uppercase tracking-widest mb-4">Jogos favoritos</h2>
-        <div className="flex gap-3">
-          {Array.from({ length: 5 }, (_, i) => {
-            const fav = userFavorites.find((f) => f.rank === i + 1);
-            const game = fav ? gameMap.get(fav.gameSlug) : undefined;
-            return (
-              <div
-                key={i}
-                className="flex-1 aspect-2/3 rounded-lg overflow-hidden bg-bg-card border border-border relative group"
-              >
-                {fav && game ? (
-                  <Link href={`/games/${fav.gameSlug}`} className="block w-full h-full">
-                    <Image
-                      src={game.coverUrl}
-                      alt={game.title}
-                      fill
-                      className="object-cover transition-transform duration-300 group-hover:scale-105"
-                    />
-                  </Link>
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center">
-                    <span className="text-border text-xl font-bold">{i + 1}</span>
-                  </div>
-                )}
-              </div>
-            );
-          })}
-        </div>
-      </section>
+      <SlotPicker
+        slots={favoriteSlots}
+        isOwner={isOwner}
+        label="Jogos favoritos"
+        hrefPrefix="/games/"
+        onSave={updateFavorite}
+        onSearch={searchGamesAction}
+      />
 
       <section>
         <h2 className="text-xs font-semibold text-silver-dim uppercase tracking-widest mb-4">Avaliações recentes</h2>

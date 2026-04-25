@@ -90,14 +90,14 @@ export async function fetchGames(
   query?: string,
   page = 1,
   genre?: string,
-  ordering = "-added"
+  ordering = "-added",
 ): Promise<{ games: Game[]; total: number; totalPages: number }> {
   const params = new URLSearchParams({
     key: API_KEY!,
     page_size: String(PAGE_SIZE),
     page: String(page),
     ...(query
-      ? { search: query, search_precise: "true" }
+      ? { search: query }
       : {
           ordering,
           metacritic: "1,100",
