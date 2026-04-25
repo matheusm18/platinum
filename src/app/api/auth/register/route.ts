@@ -4,6 +4,9 @@ import { users } from "@/db/schema";
 import { eq, or } from "drizzle-orm";
 import bcrypt from "bcryptjs";
 
+const USERNAME_PATTERN = /^[a-zA-Z0-9_]{3,20}$/;
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 export async function POST(request: Request) {
   try {
     const { username, email, password } = await request.json();
@@ -12,25 +15,40 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Todos os campos são obrigatórios" }, { status: 400 });
     }
 
+    if (!USERNAME_PATTERN.test(String(username).trim())) {
+      return NextResponse.json({ error: "Username inválido" }, { status: 400 });
+    }
+
+    if (!EMAIL_PATTERN.test(String(email).trim())) {
+      return NextResponse.json({ error: "Email inválido" }, { status: 400 });
+    }
+
+    if (String(password).length < 8) {
+      return NextResponse.json({ error: "Password deve ter pelo menos 8 caracteres" }, { status: 400 });
+    }
+
+    const normalizedUsername = String(username).trim();
+    const normalizedEmail = String(email).trim().toLowerCase();
+
     const [existing] = await db
       .select()
       .from(users)
-      .where(or(eq(users.email, email), eq(users.username, username)))
+      .where(or(eq(users.email, normalizedEmail), eq(users.username, normalizedUsername)))
       .limit(1);
 
-    if (existing?.email === email) {
+    if (existing?.email === normalizedEmail) {
       return NextResponse.json({ error: "Email já está em uso" }, { status: 409 });
     }
 
-    if (existing?.username === username) {
+    if (existing?.username === normalizedUsername) {
       return NextResponse.json({ error: "Username já está em uso" }, { status: 409 });
     }
 
-    const passwordHash = await bcrypt.hash(password, 10);
+    const passwordHash = await bcrypt.hash(String(password), 10);
 
     const [user] = await db
       .insert(users)
-      .values({ username, email, passwordHash })
+      .values({ username: normalizedUsername, email: normalizedEmail, passwordHash })
       .returning({ id: users.id, username: users.username, email: users.email });
 
     return NextResponse.json(user, { status: 201 });
