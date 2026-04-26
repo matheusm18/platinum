@@ -5,7 +5,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { getSession } from "@/lib/session";
 import { db } from "@/db";
-import { users, reviews, favorites } from "@/db/schema";
+import { users, reviews, favorites, playQueue } from "@/db/schema";
 import { fetchGame } from "@/lib/rawg";
 import { rawgResize } from "@/lib/utils";
 import { UserAvatar } from "@/components/UserAvatar";
@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { ScoreBadge } from "@/components/ui/ScoreBadge";
 import { SlotPicker, type Slot } from "@/components/SlotPicker";
 import { updateFavorite, searchGamesAction } from "@/lib/actions/favorites";
+import { updatePlayQueue } from "@/lib/actions/playQueue";
 
 type Props = { params: Promise<{ username: string }> };
 
@@ -44,15 +45,17 @@ export default async function ProfilePage({ params }: Props) {
 
   const isOwner = session?.user?.id === user.id;
 
-  const [userReviews, [{ totalReviews }], userFavorites] = await Promise.all([
+  const [userReviews, [{ totalReviews }], userFavorites, userPlayQueue] = await Promise.all([
     db.select().from(reviews).where(eq(reviews.userId, user.id)).orderBy(desc(reviews.updatedAt)).limit(20),
     db.select({ totalReviews: sql<number>`count(*)` }).from(reviews).where(eq(reviews.userId, user.id)),
     db.select().from(favorites).where(eq(favorites.userId, user.id)).orderBy(asc(favorites.rank)),
+    db.select().from(playQueue).where(eq(playQueue.userId, user.id)).orderBy(asc(playQueue.position)),
   ]);
 
   const allSlugs = [...new Set([
     ...userFavorites.map((f) => f.gameSlug),
     ...userReviews.map((r) => r.gameSlug),
+    ...userPlayQueue.map((q) => q.gameSlug),
   ])];
 
   const gameEntries = await Promise.all(
@@ -70,12 +73,24 @@ export default async function ProfilePage({ params }: Props) {
   );
 
   const favoriteSlots: Slot[] = Array.from({ length: 5 }, (_, i) => {
-    const rank = i + 1;
-    const fav = userFavorites.find((f) => f.rank === rank);
+    const position = i + 1;
+    const fav = userFavorites.find((f) => f.rank === position);
     const game = fav ? gameMap.get(fav.gameSlug) : undefined;
     return {
-      rank,
+      position,
       slug: fav?.gameSlug ?? null,
+      title: game?.title ?? null,
+      coverUrl: game?.coverUrl ?? null,
+    };
+  });
+
+  const playQueueSlots: Slot[] = Array.from({ length: 5 }, (_, i) => {
+    const position = i + 1;
+    const queuedGame = userPlayQueue.find((q) => q.position === position);
+    const game = queuedGame ? gameMap.get(queuedGame.gameSlug) : undefined;
+    return {
+      position,
+      slug: queuedGame?.gameSlug ?? null,
       title: game?.title ?? null,
       coverUrl: game?.coverUrl ?? null,
     };
@@ -120,6 +135,15 @@ export default async function ProfilePage({ params }: Props) {
         label="Jogos favoritos"
         hrefPrefix="/games/"
         onSave={updateFavorite}
+        onSearch={searchGamesAction}
+      />
+
+      <SlotPicker
+        slots={playQueueSlots}
+        isOwner={isOwner}
+        label="Quero jogar"
+        hrefPrefix="/games/"
+        onSave={updatePlayQueue}
         onSearch={searchGamesAction}
       />
 
