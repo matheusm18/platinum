@@ -8,6 +8,13 @@
       "when": 1777160023421,
       "tag": "0000_init",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1777225383201,
+      "tag": "0001_same_captain_stacy",
+      "breakpoints": true
     }
   ]
 }

@@ -8,7 +8,7 @@ import { Pencil, X, Check } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 export type Slot = {
-  rank: number;
+  position: number;
   slug: string | null;
   title: string | null;
   coverUrl: string | null;
@@ -21,7 +21,7 @@ interface Props {
   isOwner: boolean;
   label: string;
   hrefPrefix: string;
-  onSave: (rank: number, slug: string | null) => Promise<void>;
+  onSave: (position: number, slug: string | null) => Promise<void>;
   onSearch: (query: string) => Promise<SearchResult[]>;
 }
 
@@ -64,22 +64,22 @@ export function SlotPicker({ slots, isOwner, label, hrefPrefix, onSave, onSearch
     return () => { if (debounceRef.current) clearTimeout(debounceRef.current); };
   }, [query, onSearch]);
 
-  function handleSlotClick(rank: number) {
+  function handleSlotClick(position: number) {
     if (!editing) return;
-    setActiveSlot(rank === activeSlot ? null : rank);
+    setActiveSlot(position === activeSlot ? null : position);
     setQuery("");
     setResults([]);
   }
 
   function handleSelect(result: SearchResult) {
     if (activeSlot === null) return;
-    const rank = activeSlot;
+    const position = activeSlot;
 
     // atualiza o slot localmente antes do servidor confirmar pra evitar lag
     setLocalSlots((prev) =>
       prev.map((s) =>
-        s.rank === rank
-          ? { rank, slug: result.slug, title: result.title, coverUrl: result.coverUrl }
+        s.position === position
+          ? { position, slug: result.slug, title: result.title, coverUrl: result.coverUrl }
           : s
       )
     );
@@ -89,19 +89,19 @@ export function SlotPicker({ slots, isOwner, label, hrefPrefix, onSave, onSearch
 
     // sincroniza com o servidor
     startTransition(async () => {
-      await onSave(rank, result.slug);
+      await onSave(position, result.slug);
       router.refresh();
     });
   }
 
-  function handleRemove(rank: number, e: React.MouseEvent) {
+  function handleRemove(position: number, e: React.MouseEvent) {
     e.stopPropagation();
 
     // remove o slot localmente antes do servidor confirmar pra evitar lag
     setLocalSlots((prev) =>
-      prev.map((s) => (s.rank === rank ? { rank, slug: null, title: null, coverUrl: null } : s))
+      prev.map((s) => (s.position === position ? { position, slug: null, title: null, coverUrl: null } : s))
     );
-    if (activeSlot === rank) {
+    if (activeSlot === position) {
       setActiveSlot(null);
       setQuery("");
       setResults([]);
@@ -109,7 +109,7 @@ export function SlotPicker({ slots, isOwner, label, hrefPrefix, onSave, onSearch
 
     // sincroniza com o servidor
     startTransition(async () => {
-      await onSave(rank, null);
+      await onSave(position, null);
       router.refresh();
     });
   }
@@ -150,13 +150,13 @@ export function SlotPicker({ slots, isOwner, label, hrefPrefix, onSave, onSearch
 
       <div className="flex gap-3">
         {localSlots.map((slot) => {
-          const isActive = activeSlot === slot.rank;
+          const isActive = activeSlot === slot.position;
           const hasCover = slot.slug && slot.coverUrl;
 
           return (
             <div
-              key={slot.rank}
-              onClick={() => handleSlotClick(slot.rank)}
+              key={slot.position}
+              onClick={() => handleSlotClick(slot.position)}
               className={[
                 "flex-1 aspect-2/3 rounded-lg overflow-hidden bg-bg-card border relative group",
                 editing ? "cursor-pointer" : "",
@@ -183,7 +183,7 @@ export function SlotPicker({ slots, isOwner, label, hrefPrefix, onSave, onSearch
                   {editing && (
                     <div className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                       <button
-                        onClick={(e) => handleRemove(slot.rank, e)}
+                        onClick={(e) => handleRemove(slot.position, e)}
                         className="absolute top-1.5 right-1.5 w-5 h-5 rounded-full bg-black/70 flex items-center justify-center text-white/60 hover:text-white transition-colors"
                       >
                         <X size={10} />
@@ -197,7 +197,7 @@ export function SlotPicker({ slots, isOwner, label, hrefPrefix, onSave, onSearch
                   {editing ? (
                     <span className="text-silver-dim/40 text-xl font-light">+</span>
                   ) : (
-                    <span className="text-border text-xl font-bold">{slot.rank}</span>
+                    <span className="text-border text-xl font-bold">{slot.position}</span>
                   )}
                 </div>
               )}
