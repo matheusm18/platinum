@@ -12,6 +12,10 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   images: {
+    minimumCacheTTL: 2592000, // 30 days (game covers rarely change)
+    formats: ["image/webp"],
+    deviceSizes: [640, 1080, 1920],
+    imageSizes: [32, 80, 150, 256],
     remotePatterns: [
       { protocol: "https", hostname: "media.rawg.io" },
       ...(r2Hostname ? [{ protocol: "https" as const, hostname: r2Hostname }] : []),

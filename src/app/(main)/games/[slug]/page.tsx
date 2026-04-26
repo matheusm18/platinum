@@ -43,6 +43,7 @@ export default async function GamePage({ params }: Props) {
             src={game.coverUrl}
             alt={game.title}
             fill
+            sizes="100vw"
             className="object-cover"
             priority
           />

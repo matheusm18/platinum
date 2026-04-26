@@ -77,6 +77,7 @@ export default function RegisterPage() {
                   alt="Platinum"
                   width={36}
                   height={36}
+                  unoptimized
                 />
               </div>
               <span className="font-semibold text-silver">Platinum</span>

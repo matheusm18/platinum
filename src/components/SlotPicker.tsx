@@ -165,13 +165,14 @@ export function SlotPicker({ slots, isOwner, label, hrefPrefix, onSave, onSearch
               {hasCover ? (
                 <>
                   {editing ? (
-                    <Image src={slot.coverUrl!} alt={slot.title ?? ""} fill className="object-cover" />
+                    <Image src={slot.coverUrl!} alt={slot.title ?? ""} fill sizes="(max-width: 768px) 25vw, 150px" className="object-cover" />
                   ) : (
                     <Link href={`${hrefPrefix}${slot.slug}`} className="block w-full h-full">
                       <Image
                         src={slot.coverUrl!}
                         alt={slot.title ?? ""}
                         fill
+                        sizes="(max-width: 768px) 25vw, 150px"
                         className="object-cover transition-transform duration-300 group-hover:scale-105"
                       />
                     </Link>
@@ -230,7 +231,7 @@ export function SlotPicker({ slots, isOwner, label, hrefPrefix, onSave, onSearch
                 >
                   <div className="w-8 h-11 rounded shrink-0 overflow-hidden bg-bg border border-border relative">
                     {r.coverUrl && (
-                      <Image src={r.coverUrl} alt={r.title} fill className="object-cover" />
+                      <Image src={r.coverUrl} alt={r.title} fill sizes="32px" className="object-cover" unoptimized />
                     )}
                   </div>
                   <span className="text-sm text-silver truncate">{r.title}</span>
