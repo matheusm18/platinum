@@ -44,8 +44,9 @@ export default async function ProfilePage({ params }: Props) {
 
   const isOwner = session?.user?.id === user.id;
 
-  const [userReviews, userFavorites] = await Promise.all([
+  const [userReviews, [{ totalReviews }], userFavorites] = await Promise.all([
     db.select().from(reviews).where(eq(reviews.userId, user.id)).orderBy(desc(reviews.updatedAt)).limit(20),
+    db.select({ totalReviews: sql<number>`count(*)` }).from(reviews).where(eq(reviews.userId, user.id)),
     db.select().from(favorites).where(eq(favorites.userId, user.id)).orderBy(asc(favorites.rank)),
   ]);
 
@@ -94,7 +95,7 @@ export default async function ProfilePage({ params }: Props) {
             {user.bio && <p className="text-silver text-sm mt-1 max-w-sm">{user.bio}</p>}
             <div className="flex gap-6 mt-3">
               <div>
-                <span className="font-semibold text-white">{userReviews.length}</span>
+                <span className="font-semibold text-white">{totalReviews}</span>
                 <span className="text-silver-dim text-sm ml-1.5">avaliações</span>
               </div>
               <div>
@@ -130,7 +131,7 @@ export default async function ProfilePage({ params }: Props) {
           </p>
         ) : (
           <div className="space-y-3">
-            {userReviews.map((review) => {
+            {userReviews.slice(0,20).map((review) => {
               const game = gameMap.get(review.gameSlug);
               return (
                 <div key={review.id} className="flex gap-4 bg-bg-card border border-border rounded-xl p-4 items-stretch transition-all hover:border-silver/20">
