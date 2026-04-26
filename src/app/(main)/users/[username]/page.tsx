@@ -7,6 +7,7 @@ import { getSession } from "@/lib/session";
 import { db } from "@/db";
 import { users, reviews, favorites } from "@/db/schema";
 import { fetchGame } from "@/lib/rawg";
+import { rawgResize } from "@/lib/utils";
 import { UserAvatar } from "@/components/UserAvatar";
 import { Button } from "@/components/ui/button";
 import { ScoreBadge } from "@/components/ui/ScoreBadge";
@@ -135,7 +136,7 @@ export default async function ProfilePage({ params }: Props) {
                   <Link href={`/games/${review.gameSlug}`} className="shrink-0">
                     <div className="w-20 h-28 rounded-md overflow-hidden bg-bg border border-border relative">
                       {game && (
-                        <Image src={game.coverUrl} alt={game.title} fill sizes="80px" className="object-cover" />
+                        <Image src={rawgResize(game.coverUrl, 420)} alt={game.title} fill sizes="80px" className="object-cover" unoptimized />
                       )}
                     </div>
                   </Link>

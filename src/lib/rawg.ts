@@ -50,7 +50,7 @@ function toGame(raw: RawgGame): Game {
 
 export async function fetchGame(slug: string): Promise<GameDetail> {
   const res = await fetch(`${BASE_URL}/games/${encodeURIComponent(slug)}?key=${API_KEY}`, {
-    next: { revalidate: 3600 },
+    next: { revalidate: 3600 * 24 },
   });
 
   if (!res.ok) throw new Error(`RAWG API error: ${res.status}`);
@@ -106,7 +106,7 @@ export async function fetchGames(
   });
 
   const res = await fetch(`${BASE_URL}/games?${params}`, {
-    next: { revalidate: 3600 },
+    next: { revalidate: 3600 * 24 },
   });
 
   if (!res.ok) throw new Error(`RAWG API error: ${res.status}`);
