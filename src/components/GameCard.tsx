@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { ScoreBadge } from "@/components/ui/ScoreBadge";
+import { rawgResize } from "@/lib/utils";
 import type { Game } from "@/types";
 
 type Props = {
@@ -15,11 +16,12 @@ export function GameCard({ game }: Props) {
         <div className="relative aspect-video w-full">
           {game.coverUrl ? (
             <Image
-              src={game.coverUrl}
+              src={rawgResize(game.coverUrl, 640)}
               alt={`Capa de ${game.title}`}
               fill
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
               className="object-cover"
+              unoptimized
             />
           ) : (
             <div className="absolute inset-0 flex items-center justify-center bg-linear-to-br from-zinc-800 to-zinc-900">
