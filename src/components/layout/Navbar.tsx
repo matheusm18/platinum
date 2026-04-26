@@ -1,10 +1,11 @@
 import Link from "next/link";
 import Image from "next/image";
-import { auth, signOut } from "@/auth";
+import { signOut } from "@/auth";
+import { getSession } from "@/lib/session";
 import { Button } from "@/components/ui/button";
 
 export async function Navbar() {
-  const session = await auth();
+  const session = await getSession();
 
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-bg/80 backdrop-blur-sm">

@@ -1,4 +1,4 @@
-import { auth } from "@/auth";
+import { getSession } from "@/lib/session";
 import { Trophy, BookOpen, Users } from "lucide-react";
 import { Hero } from "@/components/home/hero";
 import { FeatureCard } from "@/components/home/feature-card";
@@ -25,7 +25,7 @@ const features = [
 ];
 
 export default async function HomePage() {
-  const session = await auth();
+  const session = await getSession();
 
   return (
     <div className="min-h-screen bg-bg">

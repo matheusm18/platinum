@@ -2,7 +2,7 @@ import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { fetchGame } from "@/lib/rawg";
 import type { Metadata } from "next";
-import { auth } from "@/auth";
+import { getSession } from "@/lib/session";
 import { db } from "@/db";
 import { reviews } from "@/db/schema";
 import { and, eq } from "drizzle-orm";
@@ -26,7 +26,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function GamePage({ params }: Props) {
   const { slug } = await params;
 
-  const [game, session] = await Promise.all([fetchGame(slug), auth()]);
+  const [game, session] = await Promise.all([fetchGame(slug), getSession()]);
 
   const existingReview = session?.user?.id
     ? await db.select().from(reviews).where(and(eq(reviews.userId, session.user.id), eq(reviews.gameSlug, slug))).limit(1).then((r) => r[0] ?? null)

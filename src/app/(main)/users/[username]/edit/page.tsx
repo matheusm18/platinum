@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { eq } from "drizzle-orm";
-import { auth } from "@/auth";
+import { getSession } from "@/lib/session";
 import { db } from "@/db";
 import { users } from "@/db/schema";
 import { EditAvatarForm } from "@/components/profile/edit-avatar-form";
@@ -18,7 +18,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function EditProfilePage({ params }: Props) {
   const { username } = await params;
-  const session = await auth();
+  const session = await getSession();
 
   if (!session?.user?.id) {
     redirect("/login");
