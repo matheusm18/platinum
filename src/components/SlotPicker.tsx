@@ -6,6 +6,7 @@ import Link from "next/link";
 import { rawgResize } from "@/lib/utils";
 import { Pencil, X, Check } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { clsx } from "clsx";
 
 export type Slot = {
   position: number;
@@ -162,16 +163,23 @@ export function SlotPicker({ slots, isOwner, label, hrefPrefix, onSave, onSearch
             <div
               key={slot.position}
               onClick={() => handleSlotClick(slot.position)}
-              className={[
+              className={clsx([
                 "flex-1 aspect-2/3 rounded-lg overflow-hidden bg-bg-card border relative group",
                 editing ? "cursor-pointer" : "",
                 isActive ? "border-white/30 ring-1 ring-white/10" : "border-border",
-              ].join(" ")}
+              ])}
             >
               {hasCover ? (
                 <>
                   {editing ? (
-                    <Image src={rawgResize(slot.coverUrl!, 640)} alt={slot.title ?? ""} fill sizes="(max-width: 768px) 25vw, 150px" className="object-cover" unoptimized />
+                    <>
+                      <Image src={rawgResize(slot.coverUrl!, 640)} alt={slot.title ?? ""} fill sizes="(max-width: 768px) 25vw, 150px" className="object-cover" unoptimized />
+                      <div className="absolute bottom-0 inset-x-0 bg-black/40 backdrop-blur-md border-t border-white/10 px-2.5 py-2">
+                        <span className="block text-xs font-semibold text-white/70 leading-snug line-clamp-1 text-center">
+                          {slot.title}
+                        </span>
+                      </div>
+                    </>
                   ) : (
                     <Link href={`${hrefPrefix}${slot.slug}`} className="relative block w-full h-full">
                       <Image
@@ -179,9 +187,15 @@ export function SlotPicker({ slots, isOwner, label, hrefPrefix, onSave, onSearch
                         alt={slot.title ?? ""}
                         fill
                         sizes="(max-width: 768px) 25vw, 150px"
-                        className="object-cover transition-transform duration-300 group-hover:scale-105"
+                        className="object-cover transition-transform duration-500 ease-out group-hover:scale-110"
                         unoptimized
                       />
+
+                      <div className="absolute bottom-0 inset-x-0 bg-black/40 backdrop-blur-md border-t border-white/10 px-2.5 py-2">
+                        <span className="block text-xs font-semibold text-white/70 leading-snug line-clamp-1 text-center">
+                          {slot.title}
+                        </span>
+                      </div>
                     </Link>
                   )}
 
