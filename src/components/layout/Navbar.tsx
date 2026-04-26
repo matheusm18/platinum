@@ -1,8 +1,9 @@
 import Link from "next/link";
 import Image from "next/image";
-import { signOut } from "@/auth";
 import { getSession } from "@/lib/session";
 import { Button } from "@/components/ui/button";
+import { MobileMenu } from "@/components/layout/MobileMenu";
+import { signOutAction } from "@/lib/actions/auth";
 
 export async function Navbar() {
   const session = await getSession();
@@ -13,20 +14,22 @@ export async function Navbar() {
 
         <Link href="/" className="flex items-center gap-2.5 group">
           <div className="w-7 h-7 bg-white rounded-lg overflow-hidden shrink-0">
-            <Image src="/platinum192.png" alt="Platinum" width={28} height={28} />
+            <Image src="/platinum192.png" alt="Platinum" width={28} height={28} unoptimized priority />
           </div>
           <span className="font-bold tracking-tight text-white group-hover:text-silver transition-colors">
             Platinum
           </span>
         </Link>
 
-        <div className="flex items-center gap-1">
-          <Link
-            href="/users"
-            className="px-3 py-1.5 text-sm text-silver-dim hover:text-silver transition-colors rounded-md hover:bg-bg-card"
-          >
-            Users
-          </Link>
+        <div className="hidden md:flex items-center gap-1">
+          {session && (
+            <Link
+              href="/users"
+              className="px-3 py-1.5 text-sm text-silver-dim hover:text-silver transition-colors rounded-md hover:bg-bg-card"
+            >
+              Users
+            </Link>
+          )}
 
           <Link
             href="/games"
@@ -46,10 +49,7 @@ export async function Navbar() {
                 {session.user?.name}
               </Link>
 
-              <form action={async () => {
-                "use server";
-                await signOut({ redirectTo: "/" });
-              }}>
+              <form action={signOutAction}>
                 <Button variant="ghost" size="sm" type="submit" className="text-silver-dim">
                   Sair
                 </Button>
@@ -67,6 +67,8 @@ export async function Navbar() {
             </>
           )}
         </div>
+
+        <MobileMenu username={session?.user?.name} />
       </nav>
     </header>
   );

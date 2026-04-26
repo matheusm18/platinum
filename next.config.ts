@@ -16,6 +16,9 @@ const nextConfig: NextConfig = {
     formats: ["image/webp"],
     deviceSizes: [640, 1080, 1920],
     imageSizes: [32, 80, 150, 256],
+    localPatterns: [
+      { pathname: "/uploads/**" },
+    ],
     remotePatterns: [
       { protocol: "https", hostname: "media.rawg.io" },
       ...(r2Hostname ? [{ protocol: "https" as const, hostname: r2Hostname }] : []),
