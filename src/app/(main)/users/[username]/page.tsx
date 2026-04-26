@@ -1,5 +1,5 @@
-import { notFound } from "next/navigation";
-import { eq, asc, desc } from "drizzle-orm";
+import { notFound, redirect } from "next/navigation";
+import { eq, asc, desc, sql } from "drizzle-orm";
 import Image from "next/image";
 import Link from "next/link";
 import type { Metadata } from "next";
@@ -34,14 +34,15 @@ export default async function ProfilePage({ params }: Props) {
         createdAt: users.createdAt,
       })
       .from(users)
-      .where(eq(users.username, username))
+      .where(eq(sql`lower(${users.username})`, username.toLowerCase()))
       .limit(1),
     getSession(),
   ]);
 
   if (!user) notFound();
+  if (username !== user.username) redirect(`/users/${user.username}`);
 
-  const isOwner = session?.user?.name === username;
+  const isOwner = session?.user?.id === user.id;
 
   const [userReviews, userFavorites] = await Promise.all([
     db.select().from(reviews).where(eq(reviews.userId, user.id)).orderBy(desc(reviews.updatedAt)).limit(20),
