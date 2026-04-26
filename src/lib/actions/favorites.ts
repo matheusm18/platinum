@@ -21,6 +21,15 @@ export async function updateFavorite(rank: number, gameSlug: string | null) {
       .where(and(eq(favorites.userId, session.user.id), eq(favorites.rank, rank)));
   } else {
     await db
+      .delete(favorites)
+      .where(
+        and(
+          eq(favorites.userId, session.user.id),
+          eq(favorites.gameSlug, gameSlug)
+        )
+      );
+
+    await db
       .insert(favorites)
       .values({ userId: session.user.id, gameSlug, rank })
       .onConflictDoUpdate({

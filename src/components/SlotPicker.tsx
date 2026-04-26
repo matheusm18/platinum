@@ -77,11 +77,16 @@ export function SlotPicker({ slots, isOwner, label, hrefPrefix, onSave, onSearch
 
     // atualiza o slot localmente antes do servidor confirmar pra evitar lag
     setLocalSlots((prev) =>
-      prev.map((s) =>
-        s.position === position
-          ? { position, slug: result.slug, title: result.title, coverUrl: result.coverUrl }
-          : s
-      )
+      prev.map((s) => {
+        if (s.position === position) {
+          return { position, slug: result.slug, title: result.title, coverUrl: result.coverUrl };
+        }
+
+        if (s.slug === result.slug) {
+          return { position: s.position, slug: null, title: null, coverUrl: null };
+        }
+        return s;
+    })
     );
     setActiveSlot(null);
     setQuery("");
@@ -168,7 +173,7 @@ export function SlotPicker({ slots, isOwner, label, hrefPrefix, onSave, onSearch
                   {editing ? (
                     <Image src={rawgResize(slot.coverUrl!, 640)} alt={slot.title ?? ""} fill sizes="(max-width: 768px) 25vw, 150px" className="object-cover" unoptimized />
                   ) : (
-                    <Link href={`${hrefPrefix}${slot.slug}`} className="block w-full h-full">
+                    <Link href={`${hrefPrefix}${slot.slug}`} className="relative block w-full h-full">
                       <Image
                         src={rawgResize(slot.coverUrl!, 640)}
                         alt={slot.title ?? ""}

@@ -2,7 +2,7 @@
 
 import { auth } from "@/auth";
 import { db } from "@/db";
-import { users, playQueue } from "@/db/schema";
+import { users, playQueue, favorites } from "@/db/schema";
 import { and, eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
@@ -20,6 +20,15 @@ export async function updatePlayQueue(position: number, gameSlug: string | null)
       .delete(playQueue)
       .where(and(eq(playQueue.userId, session.user.id), eq(playQueue.position, position)));
   } else {
+    await db
+      .delete(playQueue)
+      .where(
+        and(
+          eq(playQueue.userId, session.user.id),
+          eq(playQueue.gameSlug, gameSlug)
+        )
+      );
+
     await db
       .insert(playQueue)
       .values({ userId: session.user.id, gameSlug, position })

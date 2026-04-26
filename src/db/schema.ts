@@ -55,6 +55,7 @@ export const favorites = pgTable("favorites", {
   createdAt: timestamp("created_at").notNull().defaultNow(),
 }, (table) => [
   unique().on(table.userId, table.rank),
+    
   check("rank_limit", sql`${table.rank} >= 1 AND ${table.rank} <= 5`),
 ]);
 
@@ -62,9 +63,10 @@ export const playQueue = pgTable("play_queue", {
   id:        uuid("id").primaryKey().defaultRandom(),
   userId:    uuid("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
   gameSlug:  varchar("game_slug", { length: 255 }).notNull(),
-  position:      integer("position").notNull(),
+  position:  integer("position").notNull(),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 }, (table) => [
   unique().on(table.userId, table.position),
+  unique().on(table.userId, table.gameSlug),
   check("position_limit", sql`${table.position} >= 1 AND ${table.position} <= 5`),
 ]);
