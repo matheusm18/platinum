@@ -1,11 +1,11 @@
 import { notFound, redirect } from "next/navigation";
-import { eq, asc, desc, sql } from "drizzle-orm";
+import { eq, asc, desc, sql, and } from "drizzle-orm";
 import Image from "next/image";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { getSession } from "@/lib/session";
 import { db } from "@/db";
-import { users, reviews, favorites, playQueue } from "@/db/schema";
+import { users, reviews, favorites, playQueue, follows } from "@/db/schema";
 import { fetchGame } from "@/lib/rawg";
 import { rawgResize } from "@/lib/utils";
 import { UserAvatar } from "@/components/UserAvatar";
@@ -14,6 +14,7 @@ import { ScoreBadge } from "@/components/ui/ScoreBadge";
 import { SlotPicker, type Slot } from "@/components/SlotPicker";
 import { updateFavorite, searchGamesAction } from "@/lib/actions/favorites";
 import { updatePlayQueue } from "@/lib/actions/playQueue";
+import { FollowButton } from "@/components/FollowButton";
 
 type Props = { params: Promise<{ username: string }> };
 
@@ -45,12 +46,27 @@ export default async function ProfilePage({ params }: Props) {
 
   const isOwner = session?.user?.id === user.id;
 
-  const [userReviews, [{ totalReviews }], userFavorites, userPlayQueue] = await Promise.all([
+  const [
+    userReviews,
+    [{ totalReviews }],
+    userFavorites,
+    userPlayQueue,
+    [{ followerCount }],
+    [{ followingCount }],
+    followRow,
+  ] = await Promise.all([
     db.select().from(reviews).where(eq(reviews.userId, user.id)).orderBy(desc(reviews.updatedAt)).limit(20),
     db.select({ totalReviews: sql<number>`count(*)` }).from(reviews).where(eq(reviews.userId, user.id)),
     db.select().from(favorites).where(eq(favorites.userId, user.id)).orderBy(asc(favorites.rank)),
     db.select().from(playQueue).where(eq(playQueue.userId, user.id)).orderBy(asc(playQueue.position)),
+    db.select({ followerCount: sql<number>`count(*)` }).from(follows).where(eq(follows.followingId, user.id)),
+    db.select({ followingCount: sql<number>`count(*)` }).from(follows).where(eq(follows.followerId, user.id)),
+    session?.user?.id && !isOwner
+      ? db.select({ id: follows.id }).from(follows).where(and(eq(follows.followerId, session.user.id), eq(follows.followingId, user.id))).limit(1)
+      : Promise.resolve([]),
   ]);
+
+  const isFollowing = followRow.length > 0;
 
   const allSlugs = [...new Set([
     ...userFavorites.map((f) => f.gameSlug),
@@ -117,13 +133,23 @@ export default async function ProfilePage({ params }: Props) {
                 <span className="font-semibold text-white">{userFavorites.length}</span>
                 <span className="text-silver-dim text-sm ml-1.5">favoritos</span>
               </div>
+              <div>
+                <span className="font-semibold text-white">{followerCount}</span>
+                <span className="text-silver-dim text-sm ml-1.5">seguidores</span>
+              </div>
+              <div>
+                <span className="font-semibold text-white">{followingCount}</span>
+                <span className="text-silver-dim text-sm ml-1.5">seguindo</span>
+              </div>
             </div>
           </div>
           <div>
-            {isOwner && (
+            {isOwner ? (
               <Button asChild size="sm" variant="outline" className="mt-3 border-border bg-bg-card hover:bg-bg">
                 <Link href={`/users/${user.username}/edit`}>Editar perfil</Link>
               </Button>
+            ) : session?.user && (
+              <FollowButton followingId={user.id} profileUsername={user.username} isFollowing={isFollowing} />
             )}
           </div>
         </div>
