@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
+import { writeFile, unlink, mkdir } from "fs/promises";
+import path from "path";
 import { auth } from "@/auth";
 import { db } from "@/db";
 import { users } from "@/db/schema";
@@ -8,14 +10,16 @@ import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 
 const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp"] as const;
 
-const r2 = new S3Client({
+const isProduction = process.env.NODE_ENV === "production";
+
+const r2 = isProduction ? new S3Client({
   region: "auto",
   endpoint: `https://${process.env.R2_ACCOUNT_ID}.r2.cloudflarestorage.com`,
   credentials: {
     accessKeyId: process.env.R2_ACCESS_KEY_ID!,
     secretAccessKey: process.env.R2_SECRET_ACCESS_KEY!,
   },
-});
+}) : null;
 
 export async function POST(request: NextRequest) {
   const session = await auth();
@@ -63,17 +67,42 @@ export async function POST(request: NextRequest) {
     }
   }
 
-  const key = `avatars/${userId}/avatar.webp`;
+  let avatarUrl: string;
 
-  await r2.send(new PutObjectCommand({
-    Bucket: process.env.R2_BUCKET_NAME!,
-    Key: key,
-    Body: outputBuffer,
-    ContentType: "image/webp",
-  }));
+  if (isProduction) {
+    const key = `avatars/${userId}/avatar.webp`;
 
-  // cache bust via query string para forçar reload após atualização
-  const avatarUrl = `${process.env.R2_PUBLIC_URL}/${key}?v=${Date.now()}`;
+    await r2!.send(new PutObjectCommand({
+      Bucket: process.env.R2_BUCKET_NAME!,
+      Key: key,
+      Body: outputBuffer,
+      ContentType: "image/webp",
+    }));
+
+    avatarUrl = `${process.env.R2_PUBLIC_URL}/${key}?v=${Date.now()}`;
+  } else {
+
+    const uploadsDir = path.join(process.cwd(), "public", "uploads", "avatars");
+    const userDir = path.join(uploadsDir, userId);
+    await mkdir(userDir, { recursive: true });
+
+    for (const oldExt of ["jpg", "png", "webp"] as const) {
+      try {
+        await unlink(path.join(uploadsDir, `${userId}.${oldExt}`));
+      } catch {
+      }
+
+      try {
+        await unlink(path.join(userDir, `avatar.${oldExt}`));
+      } catch {
+      }
+    }
+    
+    const filename = "avatar.webp";
+    await writeFile(path.join(userDir, filename), outputBuffer);
+    
+    avatarUrl = `/uploads/avatars/${userId}/${filename}?v=${Date.now()}`;
+  }
 
   await db.update(users).set({ avatarUrl, avatarUpdatedAt: new Date() }).where(eq(users.id, userId));
 
