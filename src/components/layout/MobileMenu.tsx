@@ -1,8 +1,7 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { createPortal } from "react-dom"
-import { usePathname } from "next/navigation"
 import Link from "next/link"
 import { Menu, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -14,11 +13,7 @@ type Props = {
 
 export function MobileMenu({ username }: Props) {
   const [isOpen, setIsOpen] = useState(false)
-  const pathname = usePathname()
 
-  useEffect(() => {
-    setIsOpen(false)
-  }, [pathname])
 
   return (
     <>
@@ -32,7 +27,7 @@ export function MobileMenu({ username }: Props) {
       </Button>
 
       {isOpen && createPortal(
-        <div className="fixed inset-0 z-[9999] bg-bg flex flex-col">
+        <div className="fixed inset-0 z-9999 bg-bg flex flex-col">
           <div className="flex justify-end p-4">
             <Button
               variant="ghost"

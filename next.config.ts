@@ -12,6 +12,7 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   images: {
+    unoptimized: true,
     minimumCacheTTL: 2592000, // 30 days (game covers rarely change)
     formats: ["image/webp"],
     deviceSizes: [640, 1080, 1920],
