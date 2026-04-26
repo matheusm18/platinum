@@ -22,6 +22,7 @@ export function UserAvatar({ username, avatarUrl, className = "w-20 h-20" }: Pro
             fill
             sizes="80px"
             className="object-cover"
+            unoptimized
           />
         )
       ) : (

@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { fetchGame } from "@/lib/rawg";
+import { rawgResize } from "@/lib/utils";
 import type { Metadata } from "next";
 import { getSession } from "@/lib/session";
 import { db } from "@/db";
@@ -40,12 +41,13 @@ export default async function GamePage({ params }: Props) {
       <div className="relative h-72 w-full bg-bg-card">
         {game.coverUrl && (
           <Image
-            src={game.coverUrl}
+            src={rawgResize(game.coverUrl, 1280)}
             alt={game.title}
             fill
             sizes="100vw"
             className="object-cover"
             priority
+            unoptimized
           />
         )}
         <div className="absolute inset-0 bg-linear-to-t from-bg via-bg/60 to-transparent" />
