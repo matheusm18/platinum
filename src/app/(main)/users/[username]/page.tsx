@@ -135,7 +135,7 @@ export default async function ProfilePage({ params }: Props) {
                   <Link href={`/games/${review.gameSlug}`} className="shrink-0">
                     <div className="w-20 h-28 rounded-md overflow-hidden bg-bg border border-border relative">
                       {game && (
-                        <Image src={game.coverUrl} alt={game.title} fill className="object-cover" />
+                        <Image src={game.coverUrl} alt={game.title} fill sizes="80px" className="object-cover" />
                       )}
                     </div>
                   </Link>

@@ -22,6 +22,7 @@ export function BrandPanel() {
               width={112}
               height={112}
               priority
+              unoptimized
               className="object-cover"
             />
           </div>

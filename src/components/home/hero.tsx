@@ -22,7 +22,7 @@ export function Hero({ session }: HeroProps) {
       <div className="form-enter relative max-w-5xl mx-auto px-4 pt-24 pb-20 text-center">
         <div className="flex justify-center mb-8">
             <div className="w-28 h-28 bg-white rounded-2xl overflow-hidden shadow-logo-glow">
-            <Image src="/platinum512.png" alt="Platinum" width={112} height={112} priority />
+            <Image src="/platinum512.png" alt="Platinum" width={112} height={112} priority unoptimized />
             </div>
         </div>
 
