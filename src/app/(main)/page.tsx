@@ -8,7 +8,7 @@ const features = [
     icon: Trophy,
     title: "Avalia jogos",
     description:
-      "Dá uma nota de 0 a 100 a cada jogo que terminaste. O teu gosto, a tua escala.",
+      "Dá uma nota de 0 a 10 a cada jogo que terminaste. O teu gosto, a tua escala.",
   },
   {
     icon: BookOpen,

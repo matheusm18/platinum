@@ -6,6 +6,8 @@ import { users } from "@/db/schema";
 import { ilike } from "drizzle-orm";
 import { redirect } from "next/navigation";
 
+const PAGE_SIZE = 21;
+
 export async function fetchUsers(q: string | undefined, page: number) {
   const session = await getSession();
   if (!session?.user?.id) redirect("/login");
@@ -24,14 +26,14 @@ export async function fetchUsers(q: string | undefined, page: number) {
       })
       .from(users)
       .where(whereClause)
-      .limit(20)
-      .offset((page - 1) * 20),
+      .limit(PAGE_SIZE)
+      .offset((page - 1) * PAGE_SIZE),
     db.$count(users, whereClause),
   ]);
 
   return {
     users: usersPage,
     total,
-    totalPages: Math.ceil(total / 20),
+    totalPages: Math.ceil(total / PAGE_SIZE),
   };
 }

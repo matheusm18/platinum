@@ -74,7 +74,7 @@ export async function fetchGame(slug: string): Promise<GameDetail> {
   };
 }
 
-const PAGE_SIZE = 20;
+const PAGE_SIZE = 21;
 
 export async function fetchGenres(): Promise<Genre[]> {
   const params = new URLSearchParams({ key: API_KEY! });
