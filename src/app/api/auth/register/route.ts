@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { db } from "@/db";
 import { users } from "@/db/schema";
-import { eq, or } from "drizzle-orm";
+import { eq, or, sql } from "drizzle-orm";
 import bcrypt from "bcryptjs";
 
 const USERNAME_PATTERN = /^[a-zA-Z0-9_]{3,20}$/;
@@ -33,7 +33,10 @@ export async function POST(request: Request) {
     const [existing] = await db
       .select()
       .from(users)
-      .where(or(eq(users.email, normalizedEmail), eq(users.username, normalizedUsername)))
+      .where(or(
+        eq(users.email, normalizedEmail),
+        eq(sql`lower(${users.username})`, normalizedUsername.toLowerCase()),
+      ))
       .limit(1);
 
     if (existing) {

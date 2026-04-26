@@ -3,7 +3,7 @@
 import { auth, signOut } from "@/auth";
 import { db } from "@/db";
 import { users } from "@/db/schema";
-import { eq } from "drizzle-orm";
+import { and, eq, not, sql } from "drizzle-orm";
 import { redirect } from "next/navigation";
 
 export type UsernameState = { error: string | null };
@@ -51,10 +51,13 @@ export async function updateUsername(
   const [existingUsername] = await db
     .select({ id: users.id })
     .from(users)
-    .where(eq(users.username, newUsername))
+    .where(and(
+      eq(sql`lower(${users.username})`, newUsername.toLowerCase()),
+      not(eq(users.id, session.user.id)),
+    ))
     .limit(1);
 
-  if (existingUsername && existingUsername.id !== session.user.id) {
+  if (existingUsername) {
     return { error: "Esse username já está em uso!" };
   }
 
