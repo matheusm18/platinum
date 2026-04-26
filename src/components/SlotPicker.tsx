@@ -3,6 +3,7 @@
 import { useState, useTransition, useRef, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { rawgResize } from "@/lib/utils";
 import { Pencil, X, Check } from "lucide-react";
 import { useRouter } from "next/navigation";
 
@@ -165,15 +166,16 @@ export function SlotPicker({ slots, isOwner, label, hrefPrefix, onSave, onSearch
               {hasCover ? (
                 <>
                   {editing ? (
-                    <Image src={slot.coverUrl!} alt={slot.title ?? ""} fill sizes="(max-width: 768px) 25vw, 150px" className="object-cover" />
+                    <Image src={rawgResize(slot.coverUrl!, 640)} alt={slot.title ?? ""} fill sizes="(max-width: 768px) 25vw, 150px" className="object-cover" unoptimized />
                   ) : (
                     <Link href={`${hrefPrefix}${slot.slug}`} className="block w-full h-full">
                       <Image
-                        src={slot.coverUrl!}
+                        src={rawgResize(slot.coverUrl!, 640)}
                         alt={slot.title ?? ""}
                         fill
                         sizes="(max-width: 768px) 25vw, 150px"
                         className="object-cover transition-transform duration-300 group-hover:scale-105"
+                        unoptimized
                       />
                     </Link>
                   )}
