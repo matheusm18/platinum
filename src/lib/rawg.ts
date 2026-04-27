@@ -5,20 +5,21 @@ const BASE_URL = "https://api.rawg.io/api";
 const API_KEY = process.env.RAWG_API_KEY;
 
 const ADULT_TAG_SLUGS = new Set([
-  "nudity",
-  "sexual-content",
-  "adult",
   "hentai",
-  "nsfw",
   "eroge",
-  "adult-content",
+  "nsfw",
   "pornographic",
 ]);
 
 type RawgTag = { id: number; slug: string; name: string };
 
-function hasAdultContent(tags: RawgTag[]): boolean {
-  return tags.some((t) => ADULT_TAG_SLUGS.has(t.slug));
+function hasAdultContent(tags: RawgTag[], title: string): boolean {
+  return tags.some((t) => ADULT_TAG_SLUGS.has(t.slug))
+  || title.toLowerCase().includes("sex")
+  || title.toLowerCase().includes("nsfw")
+  || title.toLowerCase().includes("erotic")
+  || title.toLowerCase().includes("hentai")
+  || title.toLowerCase().includes("porn");
 }
 
 type RawgGameDetail = {
@@ -77,7 +78,7 @@ export async function fetchGame(slug: string): Promise<GameDetail> {
 
   const raw: RawgGameDetail = await res.json();
 
-  if (hasAdultContent(raw.tags ?? [])) notFound();
+  if (hasAdultContent(raw.tags ?? [], raw.name)) notFound();
 
   return {
     id: String(raw.id),
@@ -134,7 +135,7 @@ export async function fetchGames(
   if (!res.ok) throw new Error(`RAWG API error: ${res.status}`);
 
   const data: RawgListResponse = await res.json();
-  const games = data.results.filter((g) => !hasAdultContent(g.tags ?? [])).map(toGame);
+  const games = data.results.filter((g) => !hasAdultContent(g.tags ?? [], g.name)).map(toGame);
   return {
     games,
     total: data.count,
