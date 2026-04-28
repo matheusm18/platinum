@@ -5,7 +5,7 @@ import { cn, rawgResize } from "@/lib/utils";
 import { ScoreBadge } from "@/components/ui/ScoreBadge";
 
 const cardVariants = cva(
-  "flex w-full gap-4 bg-bg-card border border-border rounded-xl p-4 items-stretch transition-all hover:border-silver/20",
+  "flex flex-col sm:flex-row gap-4 bg-bg-card border border-border rounded-xl p-4 items-stretch transition-all hover:border-silver/20",
   {
     variants: {
       size: {
@@ -20,12 +20,12 @@ const cardVariants = cva(
 );
 
 const imageVariants = cva(
-  "shrink-0 rounded-md overflow-hidden bg-bg border border-border relative",
+  "shrink-0 rounded-md overflow-hidden bg-bg border border-border relative w-full h-48 sm:h-28 sm:w-20",
   {
     variants: {
       size: {
-        default: "w-20 h-28",
-        lg: "w-32 h-44",
+        default: "",
+        lg: "sm:w-32 sm:h-44 h-64",
       },
     },
     defaultVariants: {
@@ -71,7 +71,7 @@ export function ReviewCard({
 
       <div className="flex min-w-0 flex-1 flex-col justify-between">
         <div>
-          <div className="mb-1 flex items-start justify-between gap-4">
+          <div className="mb-2 flex flex-col items-start justify-between gap-2 sm:flex-row sm:gap-4">
             <Link
               href={`/games/${gameSlug}`}
               className={cn(
@@ -95,7 +95,7 @@ export function ReviewCard({
           {content && (
             <p
               className={cn(
-                "text-silver-dim line-clamp-4 pr-12 leading-relaxed",
+                "text-silver-dim line-clamp-3 leading-relaxed sm:line-clamp-4",
                 isLarge ? "text-base" : "text-sm",
               )}
             >
@@ -105,7 +105,7 @@ export function ReviewCard({
         </div>
 
         {createdAt && (
-          <div className="mt-4 flex justify-end">
+          <div className="mt-4 flex justify-end sm:justify-start">
             <p className="text-silver-dim text-xs tracking-widest uppercase opacity-40">
               {createdAt.toLocaleDateString("pt-PT", {
                 day: "numeric",

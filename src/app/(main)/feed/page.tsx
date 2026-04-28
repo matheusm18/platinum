@@ -106,9 +106,14 @@ export default async function FeedPage({
             >
               <div className="border-border/50 bg-bg-card/10 flex items-center justify-between border-b p-4">
                 <div className="flex items-center gap-3">
-                  <UserAvatar username={author.username} avatarUrl={author.avatarUrl} size="sm" />
+                  <Link href={`/users/${author.username}`}>
+                    <UserAvatar username={author.username} avatarUrl={author.avatarUrl} size="sm" />
+                  </Link>
+
                   <div className="flex flex-col sm:flex-row sm:items-baseline sm:gap-2">
-                    <span className="font-bold text-white">@{author.username}</span>
+                    <Link href={`/users/${author.username}`}>
+                      <span className="font-bold text-white">@{author.username}</span>
+                    </Link>
                     <span className="text-silver-dim">avaliou um jogo</span>
                   </div>
                 </div>
