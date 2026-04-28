@@ -114,7 +114,7 @@ export default async function FeedPage({
                 </div>
 
                 <span className="text-silver-dim text-xs font-semibold tracking-widest uppercase opacity-40">
-                  {formatRelativeTime(review.createdAt)}
+                  {formatRelativeTime(review.updatedAt)}
                 </span>
               </div>
 
