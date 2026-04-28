@@ -9,23 +9,38 @@ export async function Navbar() {
   const session = await getSession();
 
   return (
-    <header className="sticky top-0 z-50 border-b border-border bg-bg/80 backdrop-blur-sm">
-      <nav className="max-w-5xl mx-auto px-4 h-14 flex items-center justify-between">
-
-        <Link href="/" className="flex items-center gap-2.5 group">
-          <div className="w-7 h-7 bg-white rounded-lg overflow-hidden shrink-0">
-            <Image src="/platinum192.png" alt="Platinum" width={28} height={28} unoptimized priority />
+    <header className="border-border bg-bg/80 sticky top-0 z-50 border-b backdrop-blur-sm">
+      <nav className="mx-auto flex h-14 max-w-5xl items-center justify-between px-4">
+        <Link href="/" className="group flex items-center gap-2.5">
+          <div className="h-7 w-7 shrink-0 overflow-hidden rounded-lg bg-white">
+            <Image
+              src="/platinum192.png"
+              alt="Platinum"
+              width={28}
+              height={28}
+              unoptimized
+              priority
+            />
           </div>
-          <span className="font-bold tracking-tight text-white group-hover:text-silver transition-colors">
+          <span className="group-hover:text-silver font-bold tracking-tight text-white transition-colors">
             Platinum
           </span>
         </Link>
 
-        <div className="hidden md:flex items-center gap-1">
+        <div className="hidden items-center gap-1 md:flex">
+          {session && (
+            <Link
+              href="/feed"
+              className="text-silver-dim hover:text-silver hover:bg-bg-card rounded-md px-3 py-1.5 text-sm transition-colors"
+            >
+              Feed
+            </Link>
+          )}
+
           {session && (
             <Link
               href="/users"
-              className="px-3 py-1.5 text-sm text-silver-dim hover:text-silver transition-colors rounded-md hover:bg-bg-card"
+              className="text-silver-dim hover:text-silver hover:bg-bg-card rounded-md px-3 py-1.5 text-sm transition-colors"
             >
               Users
             </Link>
@@ -33,18 +48,18 @@ export async function Navbar() {
 
           <Link
             href="/games"
-            className="px-3 py-1.5 text-sm text-silver-dim hover:text-silver transition-colors rounded-md hover:bg-bg-card"
+            className="text-silver-dim hover:text-silver hover:bg-bg-card rounded-md px-3 py-1.5 text-sm transition-colors"
           >
             Games
           </Link>
 
-          <div className="w-px h-4 bg-border mx-2" />
+          <div className="bg-border mx-2 h-4 w-px" />
 
           {session ? (
             <>
               <Link
                 href={`/users/${session.user?.name}`}
-                className="px-5 py-1.5 text-sm text-silver-dim hover:text-silver transition-colors rounded-md hover:bg-bg-card"
+                className="text-silver-dim hover:text-silver hover:bg-bg-card rounded-md px-5 py-1.5 text-sm transition-colors"
               >
                 {session.user?.name}
               </Link>
@@ -57,7 +72,12 @@ export async function Navbar() {
             </>
           ) : (
             <>
-              <Button variant="ghost" size="sm" asChild className="text-silver-dim hover:bg-bg-card hover:text-silver px-5 py-1.5">
+              <Button
+                variant="ghost"
+                size="sm"
+                asChild
+                className="text-silver-dim hover:bg-bg-card hover:text-silver px-5 py-1.5"
+              >
                 <Link href="/login">Entrar</Link>
               </Button>
 
