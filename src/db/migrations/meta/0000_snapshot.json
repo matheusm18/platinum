@@ -1,5 +1,5 @@
 {
-  "id": "a24b3df4-2cff-4f28-94aa-c6311cc74e2a",
+  "id": "bc0110dc-5570-417a-8d1f-8821ba498c42",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -8,13 +8,6 @@
       "name": "favorites",
       "schema": "",
       "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
         "user_id": {
           "name": "user_id",
           "type": "uuid",
@@ -55,16 +48,37 @@
           ],
           "onDelete": "cascade",
           "onUpdate": "no action"
+        },
+        "favorites_game_slug_games_slug_fk": {
+          "name": "favorites_game_slug_games_slug_fk",
+          "tableFrom": "favorites",
+          "tableTo": "games",
+          "columnsFrom": [
+            "game_slug"
+          ],
+          "columnsTo": [
+            "slug"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
         }
       },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "favorites_user_id_rank_unique": {
-          "name": "favorites_user_id_rank_unique",
-          "nullsNotDistinct": false,
+      "compositePrimaryKeys": {
+        "favorites_user_id_rank_pk": {
+          "name": "favorites_user_id_rank_pk",
           "columns": [
             "user_id",
             "rank"
+          ]
+        }
+      },
+      "uniqueConstraints": {
+        "favorites_user_id_game_slug_unique": {
+          "name": "favorites_user_id_game_slug_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "user_id",
+            "game_slug"
           ]
         }
       },
@@ -81,13 +95,6 @@
       "name": "follows",
       "schema": "",
       "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
         "follower_id": {
           "name": "follower_id",
           "type": "uuid",
@@ -137,17 +144,16 @@
           "onUpdate": "no action"
         }
       },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "follows_follower_id_following_id_unique": {
-          "name": "follows_follower_id_following_id_unique",
-          "nullsNotDistinct": false,
+      "compositePrimaryKeys": {
+        "follows_follower_id_following_id_pk": {
+          "name": "follows_follower_id_following_id_pk",
           "columns": [
             "follower_id",
             "following_id"
           ]
         }
       },
+      "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {
         "no_self_follow": {
@@ -161,13 +167,6 @@
       "name": "game_library",
       "schema": "",
       "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
         "user_id": {
           "name": "user_id",
           "type": "uuid",
@@ -216,12 +215,198 @@
           ],
           "onDelete": "cascade",
           "onUpdate": "no action"
+        },
+        "game_library_game_slug_games_slug_fk": {
+          "name": "game_library_game_slug_games_slug_fk",
+          "tableFrom": "game_library",
+          "tableTo": "games",
+          "columnsFrom": [
+            "game_slug"
+          ],
+          "columnsTo": [
+            "slug"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
         }
       },
+      "compositePrimaryKeys": {
+        "game_library_user_id_game_slug_pk": {
+          "name": "game_library_user_id_game_slug_pk",
+          "columns": [
+            "user_id",
+            "game_slug"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.games": {
+      "name": "games",
+      "schema": "",
+      "columns": {
+        "slug": {
+          "name": "slug",
+          "type": "varchar(255)",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "title": {
+          "name": "title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "cover_url": {
+          "name": "cover_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "release_year": {
+          "name": "release_year",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "average_score": {
+          "name": "average_score",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "genres": {
+          "name": "genres",
+          "type": "text[]",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "platforms": {
+          "name": "platforms",
+          "type": "text[]",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "developers": {
+          "name": "developers",
+          "type": "text[]",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "publishers": {
+          "name": "publishers",
+          "type": "text[]",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "playtime": {
+          "name": "playtime",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "website": {
+          "name": "website",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "last_synced_at": {
+          "name": "last_synced_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
       "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.play_queue": {
+      "name": "play_queue",
+      "schema": "",
+      "columns": {
+        "user_id": {
+          "name": "user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "game_slug": {
+          "name": "game_slug",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "position": {
+          "name": "position",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "play_queue_user_id_users_id_fk": {
+          "name": "play_queue_user_id_users_id_fk",
+          "tableFrom": "play_queue",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "play_queue_game_slug_games_slug_fk": {
+          "name": "play_queue_game_slug_games_slug_fk",
+          "tableFrom": "play_queue",
+          "tableTo": "games",
+          "columnsFrom": [
+            "game_slug"
+          ],
+          "columnsTo": [
+            "slug"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "play_queue_user_id_position_pk": {
+          "name": "play_queue_user_id_position_pk",
+          "columns": [
+            "user_id",
+            "position"
+          ]
+        }
+      },
       "uniqueConstraints": {
-        "game_library_user_id_game_slug_unique": {
-          "name": "game_library_user_id_game_slug_unique",
+        "play_queue_user_id_game_slug_unique": {
+          "name": "play_queue_user_id_game_slug_unique",
           "nullsNotDistinct": false,
           "columns": [
             "user_id",
@@ -230,20 +415,18 @@
         }
       },
       "policies": {},
-      "checkConstraints": {},
+      "checkConstraints": {
+        "position_limit": {
+          "name": "position_limit",
+          "value": "\"play_queue\".\"position\" >= 1 AND \"play_queue\".\"position\" <= 5"
+        }
+      },
       "isRLSEnabled": false
     },
     "public.reviews": {
       "name": "reviews",
       "schema": "",
       "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
         "user_id": {
           "name": "user_id",
           "type": "uuid",
@@ -297,19 +480,31 @@
           ],
           "onDelete": "cascade",
           "onUpdate": "no action"
+        },
+        "reviews_game_slug_games_slug_fk": {
+          "name": "reviews_game_slug_games_slug_fk",
+          "tableFrom": "reviews",
+          "tableTo": "games",
+          "columnsFrom": [
+            "game_slug"
+          ],
+          "columnsTo": [
+            "slug"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
         }
       },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "reviews_user_id_game_slug_unique": {
-          "name": "reviews_user_id_game_slug_unique",
-          "nullsNotDistinct": false,
+      "compositePrimaryKeys": {
+        "reviews_user_id_game_slug_pk": {
+          "name": "reviews_user_id_game_slug_pk",
           "columns": [
             "user_id",
             "game_slug"
           ]
         }
       },
+      "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
