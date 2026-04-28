@@ -1,15 +1,13 @@
 import { notFound, redirect } from "next/navigation";
 import { eq, asc, desc, sql, and } from "drizzle-orm";
-import Image from "next/image";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { getSession } from "@/lib/session";
 import { db } from "@/db";
 import { users, games, reviews, favorites, playQueue, follows } from "@/db/schema";
-import { rawgResize } from "@/lib/utils";
 import { UserAvatar } from "@/components/UserAvatar";
 import { Button } from "@/components/ui/button";
-import { ScoreBadge } from "@/components/ui/ScoreBadge";
+import { ReviewCard } from "@/components/ReviewCard";
 import { SlotPicker, type Slot } from "@/components/SlotPicker";
 import { updateFavorite, searchGamesAction } from "@/lib/actions/favorites";
 import { updatePlayQueue } from "@/lib/actions/playQueue";
@@ -26,7 +24,11 @@ export default async function ProfilePage({ params }: Props) {
   const { username } = await params;
 
   const [[user], session] = await Promise.all([
-    db.select().from(users).where(eq(sql`lower(${users.username})`, username.toLowerCase())).limit(1),
+    db
+      .select()
+      .from(users)
+      .where(eq(sql`lower(${users.username})`, username.toLowerCase()))
+      .limit(1),
     getSession(),
   ]);
 
@@ -44,36 +46,53 @@ export default async function ProfilePage({ params }: Props) {
     [{ followingCount }],
     followRow,
   ] = await Promise.all([
-    db.select({ review: reviews, game: games })
+    db
+      .select({ review: reviews, game: games })
       .from(reviews)
       .innerJoin(games, eq(reviews.gameSlug, games.slug))
       .where(eq(reviews.userId, user.id))
-      .orderBy(desc(reviews.updatedAt)).limit(20),
+      .orderBy(desc(reviews.updatedAt))
+      .limit(20),
 
-    db.select({ fav: favorites, game: games })
+    db
+      .select({ fav: favorites, game: games })
       .from(favorites)
       .innerJoin(games, eq(favorites.gameSlug, games.slug))
       .where(eq(favorites.userId, user.id))
       .orderBy(asc(favorites.rank)),
 
-    db.select({ q: playQueue, game: games })
+    db
+      .select({ q: playQueue, game: games })
       .from(playQueue)
       .innerJoin(games, eq(playQueue.gameSlug, games.slug))
       .where(eq(playQueue.userId, user.id))
       .orderBy(asc(playQueue.position)),
 
-    db.select({ totalReviews: sql<number>`count(*)` }).from(reviews).where(eq(reviews.userId, user.id)),
-    db.select({ followerCount: sql<number>`count(*)` }).from(follows).where(eq(follows.followingId, user.id)),
-    db.select({ followingCount: sql<number>`count(*)` }).from(follows).where(eq(follows.followerId, user.id)),
+    db
+      .select({ totalReviews: sql<number>`count(*)` })
+      .from(reviews)
+      .where(eq(reviews.userId, user.id)),
+    db
+      .select({ followerCount: sql<number>`count(*)` })
+      .from(follows)
+      .where(eq(follows.followingId, user.id)),
+    db
+      .select({ followingCount: sql<number>`count(*)` })
+      .from(follows)
+      .where(eq(follows.followerId, user.id)),
     session?.user?.id && !isOwner
-      ? db.select({ followerId: follows.followerId }).from(follows).where(and(eq(follows.followerId, session.user.id), eq(follows.followingId, user.id))).limit(1)
+      ? db
+          .select({ followerId: follows.followerId })
+          .from(follows)
+          .where(and(eq(follows.followerId, session.user.id), eq(follows.followingId, user.id)))
+          .limit(1)
       : Promise.resolve([]),
   ]);
 
   const isFollowing = followRow && followRow.length > 0;
-  const joinedDate = user.createdAt.toLocaleDateString("pt-PT", { 
-    month: "long", 
-    year: "numeric" 
+  const joinedDate = user.createdAt.toLocaleDateString("pt-PT", {
+    month: "long",
+    year: "numeric",
   });
 
   const favoriteSlots: Slot[] = Array.from({ length: 5 }, (_, i) => {
@@ -99,49 +118,54 @@ export default async function ProfilePage({ params }: Props) {
   });
 
   return (
-    <div className="max-w-5xl mx-auto px-4 py-12">
-      <div className="flex items-start gap-6 mb-12">
+    <div className="mx-auto max-w-5xl px-4 py-12">
+      <div className="mb-12 flex items-start gap-6">
         <UserAvatar username={user.username} avatarUrl={user.avatarUrl} />
 
-        <div className="flex-1 flex items-start justify-between">
+        <div className="flex flex-1 items-start justify-between">
           <div>
             <h1 className="text-2xl font-bold text-white">@{user.username}</h1>
-            <p className="text-silver-dim text-sm mt-1">Membro desde {joinedDate}</p>
-            {user.bio && (
-              <p className="text-silver text-sm mt-1 max-w-sm">{user.bio}</p>
-            )}
-            
-            <div className="flex gap-6 mt-3">
+            <p className="text-silver-dim mt-1 text-sm">Membro desde {joinedDate}</p>
+            {user.bio && <p className="text-silver mt-1 max-w-sm text-sm">{user.bio}</p>}
+
+            <div className="mt-3 flex gap-6">
               <div>
                 <span className="font-semibold text-white">{totalReviews}</span>
-                <span className="text-silver-dim text-sm ml-1.5">avaliações</span>
+                <span className="text-silver-dim ml-1.5 text-sm">avaliações</span>
               </div>
               <div>
                 <span className="font-semibold text-white">{favoritesWithGames.length}</span>
-                <span className="text-silver-dim text-sm ml-1.5">favoritos</span>
+                <span className="text-silver-dim ml-1.5 text-sm">favoritos</span>
               </div>
               <div>
                 <span className="font-semibold text-white">{followerCount}</span>
-                <span className="text-silver-dim text-sm ml-1.5">seguidores</span>
+                <span className="text-silver-dim ml-1.5 text-sm">seguidores</span>
               </div>
               <div>
                 <span className="font-semibold text-white">{followingCount}</span>
-                <span className="text-silver-dim text-sm ml-1.5">seguindo</span>
+                <span className="text-silver-dim ml-1.5 text-sm">seguindo</span>
               </div>
             </div>
           </div>
 
           <div>
             {isOwner ? (
-              <Button asChild size="sm" variant="outline" className="mt-3 border-border bg-bg-card hover:bg-bg">
+              <Button
+                asChild
+                size="sm"
+                variant="outline"
+                className="border-border bg-bg-card hover:bg-bg mt-3"
+              >
                 <Link href={`/users/${user.username}/edit`}>Editar perfil</Link>
               </Button>
-            ) : session?.user && (
-              <FollowButton 
-                followingId={user.id} 
-                profileUsername={user.username} 
-                isFollowing={isFollowing} 
-              />
+            ) : (
+              session?.user && (
+                <FollowButton
+                  followingId={user.id}
+                  profileUsername={user.username}
+                  isFollowing={isFollowing}
+                />
+              )
             )}
           </div>
         </div>
@@ -166,68 +190,26 @@ export default async function ProfilePage({ params }: Props) {
       />
 
       <section>
-        <h2 className="text-xs font-semibold text-silver-dim uppercase tracking-widest mb-4">
+        <h2 className="text-silver-dim mb-4 text-xs font-semibold tracking-widest uppercase">
           Avaliações recentes
         </h2>
-        
+
         {reviewsWithGames.length === 0 ? (
-          <p className="text-silver-dim text-sm py-10 text-center border border-dashed border-border rounded-xl">
+          <p className="text-silver-dim border-border rounded-xl border border-dashed py-10 text-center text-sm">
             Ainda sem avaliações.
           </p>
         ) : (
           <div className="space-y-3">
             {reviewsWithGames.map(({ review, game }) => (
-              <div 
-                key={`${review.userId}-${review.gameSlug}`} 
-                className="flex gap-4 bg-bg-card border border-border rounded-xl p-4 items-stretch transition-all hover:border-silver/20"
-              >
-                <Link href={`/games/${review.gameSlug}`} className="shrink-0">
-                  <div className="w-20 h-28 rounded-md overflow-hidden bg-bg border border-border relative">
-                    <Image 
-                      src={rawgResize(game.coverUrl, 420)} 
-                      alt={game.title} 
-                      fill 
-                      sizes="80px" 
-                      className="object-cover" 
-                      unoptimized 
-                    />
-                  </div>
-                </Link>
-
-                <div className="flex-1 min-w-0 flex flex-col justify-between">
-                  <div>
-                    <div className="flex items-start justify-between gap-4 mb-1">
-                      <Link
-                        href={`/games/${review.gameSlug}`}
-                        className="font-bold text-white hover:text-silver transition-colors text-xl leading-tight"
-                      >
-                        {game.title}
-                      </Link>
-                      <ScoreBadge 
-                        score={review.score * 10} 
-                        normalized={true} 
-                        className="shrink-0 text-lg font-mono font-bold px-2 py-0.5 rounded"
-                      />
-                    </div>
-
-                    {review.content && (
-                      <p className="text-silver-dim text-sm leading-relaxed pr-12"> 
-                        {review.content}
-                      </p>
-                    )}
-                  </div>
-
-                  <div className="flex justify-end mt-4">
-                    <p className="text-xs uppercase tracking-widest text-silver-dim opacity-40">
-                      {review.createdAt.toLocaleDateString("pt-PT", { 
-                        day: "numeric", 
-                        month: "short", 
-                        year: "numeric" 
-                      })}
-                    </p>
-                  </div>
-                </div>
-              </div>
+              <ReviewCard
+                key={`${review.userId}-${game.slug}`}
+                gameSlug={game.slug}
+                title={game.title}
+                score={review.score}
+                content={review.content}
+                coverUrl={game.coverUrl}
+                createdAt={review.createdAt}
+              />
             ))}
           </div>
         )}
