@@ -119,21 +119,43 @@ export default async function ProfilePage({ params }: Props) {
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-12">
-      <div className="mb-12 flex items-start gap-6">
-        <UserAvatar username={user.username} avatarUrl={user.avatarUrl} />
+      <div className="mb-12 flex flex-col items-center gap-6 text-center md:flex-row md:items-start md:text-left">
+        <UserAvatar username={user.username} avatarUrl={user.avatarUrl} size="xl" />
 
-        <div className="flex flex-1 items-start justify-between">
-          <div>
+        <div className="flex flex-1 flex-col items-center md:items-start">
+          <div className="flex-w-full flex-col items-center justify-between gap-4 md:flex-row md:items-start">
+            <div className="flex flex-col items-center md:items-start"></div>
             <h1 className="text-2xl font-bold text-white">@{user.username}</h1>
             <p className="text-silver-dim mt-1 text-sm">Membro desde {joinedDate}</p>
             {user.bio && <p className="text-silver mt-1 max-w-sm text-sm">{user.bio}</p>}
 
-            <div className="mt-3 flex gap-6">
-              <div>
+            <div className="w-full md:w-auto">
+              {isOwner ? (
+                <Button
+                  asChild
+                  size="sm"
+                  variant="outline"
+                  className="border-border bg-bg-card hover:bg-bg mt-3 w-full md:w-auto"
+                >
+                  <Link href={`/users/${user.username}/edit`}>Editar perfil</Link>
+                </Button>
+              ) : (
+                session?.user && (
+                  <FollowButton
+                    followingId={user.id}
+                    profileUsername={user.username}
+                    isFollowing={isFollowing}
+                  />
+                )
+              )}
+            </div>
+
+            <div className="mt-6 flex flex-wrap justify-center gap-x-6 gap-y-3 md:justify-start">
+              <div className="flex items-baseline gap-1.5">
                 <span className="font-semibold text-white">{totalReviews}</span>
                 <span className="text-silver-dim ml-1.5 text-sm">avaliações</span>
               </div>
-              <div>
+              <div className="flex items-baseline gap-1.5">
                 <span className="font-semibold text-white">{favoritesWithGames.length}</span>
                 <span className="text-silver-dim ml-1.5 text-sm">favoritos</span>
               </div>
@@ -141,32 +163,11 @@ export default async function ProfilePage({ params }: Props) {
                 <span className="font-semibold text-white">{followerCount}</span>
                 <span className="text-silver-dim ml-1.5 text-sm">seguidores</span>
               </div>
-              <div>
+              <div className="flex items-baseline gap-1.5">
                 <span className="font-semibold text-white">{followingCount}</span>
                 <span className="text-silver-dim ml-1.5 text-sm">seguindo</span>
               </div>
             </div>
-          </div>
-
-          <div>
-            {isOwner ? (
-              <Button
-                asChild
-                size="sm"
-                variant="outline"
-                className="border-border bg-bg-card hover:bg-bg mt-3"
-              >
-                <Link href={`/users/${user.username}/edit`}>Editar perfil</Link>
-              </Button>
-            ) : (
-              session?.user && (
-                <FollowButton
-                  followingId={user.id}
-                  profileUsername={user.username}
-                  isFollowing={isFollowing}
-                />
-              )
-            )}
           </div>
         </div>
       </div>
