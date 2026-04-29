@@ -61,7 +61,7 @@ export default async function FeedPage({
       .innerJoin(games, eq(reviews.gameSlug, games.slug))
       .innerJoin(
         follows,
-        and(eq(follows.followingId, reviews.userId), eq(follows.followerId, user.id)),
+        and(eq(follows.followerId, reviews.userId), eq(follows.followerId, user.id)),
       )
       .innerJoin(users, eq(reviews.userId, users.id))
       .orderBy(desc(reviews.updatedAt))

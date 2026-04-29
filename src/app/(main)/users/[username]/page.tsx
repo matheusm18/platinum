@@ -160,12 +160,22 @@ export default async function ProfilePage({ params }: Props) {
                 <span className="text-silver-dim ml-1.5 text-sm">favoritos</span>
               </div>
               <div>
-                <span className="font-semibold text-white">{followerCount}</span>
-                <span className="text-silver-dim ml-1.5 text-sm">seguidores</span>
+                <Link
+                  href={`/users/${user.username}/followers`}
+                  className="flex items-baseline gap-1.5"
+                >
+                  <span className="font-semibold text-white">{followerCount}</span>
+                  <span className="text-silver-dim ml-1.5 text-sm">seguidores</span>
+                </Link>
               </div>
-              <div className="flex items-baseline gap-1.5">
-                <span className="font-semibold text-white">{followingCount}</span>
-                <span className="text-silver-dim ml-1.5 text-sm">seguindo</span>
+              <div>
+                <Link
+                  href={`/users/${user.username}/following`}
+                  className="flex items-baseline gap-1.5"
+                >
+                  <span className="font-semibold text-white">{followingCount}</span>
+                  <span className="text-silver-dim ml-1.5 text-sm">seguindo</span>
+                </Link>
               </div>
             </div>
           </div>
