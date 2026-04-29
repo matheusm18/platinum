@@ -88,7 +88,11 @@ export default async function FollowingPage({ params }: Props) {
           ))
         ) : (
           <div className="py-20 text-center">
-            <p className="text-silver-dim">Ainda não segues ninguém</p>
+            {isOwner ? (
+              <p className="text-silver-dim">Ainda não segues ninguém</p>
+            ) : (
+              <p className="text-silver-dim">{user.username} ainda não segue ninguém</p>
+            )}
           </div>
         )}
       </div>
