@@ -39,26 +39,31 @@ export default async function EditProfilePage({ params }: Props) {
   }
 
   return (
-    <div className="max-w-3xl mx-auto px-4 py-12 space-y-8">
+    <div className="mx-auto max-w-3xl space-y-8 px-4 py-12">
       <div>
-        <Link href={`/users/${user.username}`} className="text-sm text-silver-dim hover:text-silver transition-colors underline">
-            Voltar ao perfil
+        <Link
+          href={`/users/${user.username}`}
+          className="text-silver-dim hover:text-silver text-sm underline transition-colors"
+        >
+          Voltar ao perfil
         </Link>
-        <h1 className="text-2xl font-bold text-white mt-2">Editar perfil</h1>
+        <h1 className="mt-2 text-2xl font-bold text-white">Editar perfil</h1>
       </div>
 
-      <section className="rounded-xl border border-border bg-bg-card p-6 space-y-4">
-        <h2 className="text-sm font-semibold text-silver uppercase tracking-widest">Foto de perfil</h2>
+      <section className="border-border bg-bg-card space-y-4 rounded-xl border p-6">
+        <h2 className="text-silver text-sm font-semibold tracking-widest uppercase">
+          Foto de perfil
+        </h2>
         <EditAvatarForm username={user.username} avatarUrl={user.avatarUrl} />
       </section>
 
-      <section className="rounded-xl border border-border bg-bg-card p-6 space-y-4">
-        <h2 className="text-sm font-semibold text-silver uppercase tracking-widest">Bio</h2>
+      <section className="border-border bg-bg-card space-y-4 rounded-xl border p-6">
+        <h2 className="text-silver text-sm font-semibold tracking-widest uppercase">Bio</h2>
         <EditBioForm bio={user.bio} />
       </section>
 
-      <section className="rounded-xl border border-border bg-bg-card p-6 space-y-4">
-        <h2 className="text-sm font-semibold text-silver uppercase tracking-widest">Username</h2>
+      <section className="border-border bg-bg-card space-y-4 rounded-xl border p-6">
+        <h2 className="text-silver text-sm font-semibold tracking-widest uppercase">Username</h2>
         <EditUsernameForm username={user.username} />
       </section>
     </div>

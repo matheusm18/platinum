@@ -1,6 +1,7 @@
 "use client";
 
 import { useTransition } from "react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { followUser, unfollowUser } from "@/lib/actions/follow";
 
@@ -15,10 +16,16 @@ export function FollowButton({ followingId, profileUsername, isFollowing }: Prop
 
   function handleClick() {
     startTransition(async () => {
-      if (isFollowing) {
-        await unfollowUser(followingId, profileUsername);
-      } else {
-        await followUser(followingId, profileUsername);
+      try {
+        if (isFollowing) {
+          await unfollowUser(followingId, profileUsername);
+          toast.success("Deixaste de seguir " + profileUsername);
+        } else {
+          await followUser(followingId, profileUsername);
+          toast.success("Estás agora a seguir " + profileUsername);
+        }
+      } catch {
+        toast.error("Algo correu mal");
       }
     });
   }
@@ -27,7 +34,7 @@ export function FollowButton({ followingId, profileUsername, isFollowing }: Prop
     <Button
       size="sm"
       variant={isFollowing ? "outline" : "default"}
-      className={isFollowing ? "mt-3 border-border bg-bg-card hover:bg-bg" : "mt-3"}
+      className={isFollowing ? "border-border bg-bg-card hover:bg-bg mt-3" : "mt-3"}
       onClick={handleClick}
       disabled={isPending}
     >
