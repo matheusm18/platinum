@@ -1,4 +1,4 @@
-import { eq, desc, and } from "drizzle-orm";
+import { eq, desc, and, not } from "drizzle-orm";
 import { getSession } from "@/lib/session";
 import { db } from "@/db";
 import { users, games, reviews, follows } from "@/db/schema";
@@ -45,6 +45,7 @@ export default async function FeedPage({
       .from(reviews)
       .innerJoin(games, eq(reviews.gameSlug, games.slug))
       .innerJoin(users, eq(reviews.userId, users.id))
+      .where(not(eq(reviews.userId, user.id)))
       .orderBy(desc(reviews.updatedAt))
       .limit(20);
   } else {
@@ -61,7 +62,7 @@ export default async function FeedPage({
       .innerJoin(games, eq(reviews.gameSlug, games.slug))
       .innerJoin(
         follows,
-        and(eq(follows.followerId, reviews.userId), eq(follows.followerId, user.id)),
+        and(eq(follows.followingId, reviews.userId), eq(follows.followerId, user.id)),
       )
       .innerJoin(users, eq(reviews.userId, users.id))
       .orderBy(desc(reviews.updatedAt))
