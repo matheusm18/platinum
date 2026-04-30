@@ -4,22 +4,19 @@ import type { Game, GameDetail } from "@/types";
 const BASE_URL = "https://api.rawg.io/api";
 const API_KEY = process.env.RAWG_API_KEY;
 
-const ADULT_TAG_SLUGS = new Set([
-  "hentai",
-  "eroge",
-  "nsfw",
-  "pornographic",
-]);
+const ADULT_TAG_SLUGS = new Set(["hentai", "eroge", "nsfw", "pornographic"]);
 
 type RawgTag = { id: number; slug: string; name: string };
 
 function hasAdultContent(tags: RawgTag[], title: string): boolean {
-  return tags.some((t) => ADULT_TAG_SLUGS.has(t.slug))
-  || title.toLowerCase().includes("sex")
-  || title.toLowerCase().includes("nsfw")
-  || title.toLowerCase().includes("erotic")
-  || title.toLowerCase().includes("hentai")
-  || title.toLowerCase().includes("porn");
+  return (
+    tags.some((t) => ADULT_TAG_SLUGS.has(t.slug)) ||
+    title.toLowerCase().includes("sex") ||
+    title.toLowerCase().includes("nsfw") ||
+    title.toLowerCase().includes("erotic") ||
+    title.toLowerCase().includes("hentai") ||
+    title.toLowerCase().includes("porn")
+  );
 }
 
 type RawgGameDetail = {
@@ -59,7 +56,6 @@ export type Genre = { slug: string; name: string };
 
 function toGame(raw: RawgGame): Game {
   return {
-    id: String(raw.id),
     slug: raw.slug,
     title: raw.name,
     coverUrl: raw.background_image ?? "",
@@ -81,7 +77,6 @@ export async function fetchGame(slug: string): Promise<GameDetail> {
   if (hasAdultContent(raw.tags ?? [], raw.name)) notFound();
 
   return {
-    id: String(raw.id),
     slug: raw.slug,
     title: raw.name,
     coverUrl: raw.background_image ?? "",
