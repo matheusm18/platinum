@@ -7,6 +7,7 @@ import { rawgResize } from "@/lib/utils";
 import { Pencil, X, Check } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { clsx } from "clsx";
+import { Button } from "./ui/button";
 
 export type Slot = {
   position: number;
@@ -21,12 +22,23 @@ interface Props {
   slots: Slot[];
   isOwner: boolean;
   label: string;
+  buttonText?: string;
+  buttonHref?: string;
   hrefPrefix: string;
   onSave: (position: number, slug: string | null) => Promise<void>;
   onSearch: (query: string) => Promise<SearchResult[]>;
 }
 
-export function SlotPicker({ slots, isOwner, label, hrefPrefix, onSave, onSearch }: Props) {
+export function SlotPicker({
+  slots,
+  isOwner,
+  label,
+  buttonText,
+  buttonHref,
+  hrefPrefix,
+  onSave,
+  onSearch,
+}: Props) {
   const router = useRouter();
 
   // copia dos slots para manipular localmente e evitar lag na UI enquanto espera a resposta
@@ -55,14 +67,19 @@ export function SlotPicker({ slots, isOwner, label, hrefPrefix, onSave, onSearch
     if (debounceRef.current) clearTimeout(debounceRef.current);
 
     debounceRef.current = setTimeout(async () => {
-      if (!query.trim()) { setResults([]); return; }
+      if (!query.trim()) {
+        setResults([]);
+        return;
+      }
       setSearching(true);
       const res = await onSearch(query);
       setResults(res);
       setSearching(false);
     }, 400);
 
-    return () => { if (debounceRef.current) clearTimeout(debounceRef.current); };
+    return () => {
+      if (debounceRef.current) clearTimeout(debounceRef.current);
+    };
   }, [query, onSearch]);
 
   function handleSlotClick(position: number) {
@@ -87,7 +104,7 @@ export function SlotPicker({ slots, isOwner, label, hrefPrefix, onSave, onSearch
           return { position: s.position, slug: null, title: null, coverUrl: null };
         }
         return s;
-    })
+      }),
     );
     setActiveSlot(null);
     setQuery("");
@@ -105,7 +122,9 @@ export function SlotPicker({ slots, isOwner, label, hrefPrefix, onSave, onSearch
 
     // remove o slot localmente antes do servidor confirmar pra evitar lag
     setLocalSlots((prev) =>
-      prev.map((s) => (s.position === position ? { position, slug: null, title: null, coverUrl: null } : s))
+      prev.map((s) =>
+        s.position === position ? { position, slug: null, title: null, coverUrl: null } : s,
+      ),
     );
     if (activeSlot === position) {
       setActiveSlot(null);
@@ -129,29 +148,38 @@ export function SlotPicker({ slots, isOwner, label, hrefPrefix, onSave, onSearch
 
   return (
     <section className="mb-12">
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="text-xs font-semibold text-silver-dim uppercase tracking-widest">
-          {label}
-        </h2>
-        {isOwner && (
-          editing ? (
-            <button
-              onClick={exitEditing}
-              className="flex items-center gap-1 text-xs text-silver-dim hover:text-silver transition-colors"
+      <div className="mb-4 flex items-center justify-between">
+        <h2 className="text-silver-dim text-xs font-semibold tracking-widest uppercase">{label}</h2>
+
+        <div className="flex items-center gap-4">
+          {buttonText && buttonHref && (
+            <Link
+              href={buttonHref}
+              className="text-silver-dim text-xs font-medium transition-colors hover:text-white"
             >
-              <Check size={12} />
-              Concluído
-            </button>
-          ) : (
-            <button
-              onClick={() => setEditing(true)}
-              className="flex items-center gap-1 text-xs text-silver-dim hover:text-silver transition-colors"
-            >
-              <Pencil size={12} />
-              Editar
-            </button>
-          )
-        )}
+              {buttonText}
+            </Link>
+          )}
+
+          {isOwner &&
+            (editing ? (
+              <button
+                onClick={exitEditing}
+                className="text-silver-dim hover:text-silver flex items-center gap-1 text-xs transition-colors"
+              >
+                <Check size={12} />
+                Concluído
+              </button>
+            ) : (
+              <button
+                onClick={() => setEditing(true)}
+                className="text-silver-dim hover:text-silver flex items-center gap-1 text-xs transition-colors"
+              >
+                <Pencil size={12} />
+                Editar
+              </button>
+            ))}
+        </div>
       </div>
 
       <div className="flex gap-3">
@@ -164,7 +192,7 @@ export function SlotPicker({ slots, isOwner, label, hrefPrefix, onSave, onSearch
               key={slot.position}
               onClick={() => handleSlotClick(slot.position)}
               className={clsx([
-                "flex-1 aspect-2/3 rounded-lg overflow-hidden bg-bg-card border relative group",
+                "bg-bg-card group relative aspect-2/3 flex-1 overflow-hidden rounded-lg border",
                 editing ? "cursor-pointer" : "",
                 isActive ? "border-white/30 ring-1 ring-white/10" : "border-border",
               ])}
@@ -173,15 +201,25 @@ export function SlotPicker({ slots, isOwner, label, hrefPrefix, onSave, onSearch
                 <>
                   {editing ? (
                     <>
-                      <Image src={rawgResize(slot.coverUrl!, 640)} alt={slot.title ?? ""} fill sizes="(max-width: 768px) 25vw, 150px" className="object-cover" unoptimized />
-                      <div className="absolute bottom-0 inset-x-0 bg-black/40 backdrop-blur-md border-t border-white/10 px-2.5 py-2">
-                        <span className="block text-xs font-semibold text-white/70 leading-snug line-clamp-1 text-center">
+                      <Image
+                        src={rawgResize(slot.coverUrl!, 640)}
+                        alt={slot.title ?? ""}
+                        fill
+                        sizes="(max-width: 768px) 25vw, 150px"
+                        className="object-cover"
+                        unoptimized
+                      />
+                      <div className="absolute inset-x-0 bottom-0 border-t border-white/10 bg-black/40 px-2.5 py-2 backdrop-blur-md">
+                        <span className="line-clamp-1 block text-center text-xs leading-snug font-semibold text-white/70">
                           {slot.title}
                         </span>
                       </div>
                     </>
                   ) : (
-                    <Link href={`${hrefPrefix}${slot.slug}`} className="relative block w-full h-full">
+                    <Link
+                      href={`${hrefPrefix}${slot.slug}`}
+                      className="relative block h-full w-full"
+                    >
                       <Image
                         src={rawgResize(slot.coverUrl!, 640)}
                         alt={slot.title ?? ""}
@@ -191,8 +229,8 @@ export function SlotPicker({ slots, isOwner, label, hrefPrefix, onSave, onSearch
                         unoptimized
                       />
 
-                      <div className="absolute bottom-0 inset-x-0 bg-black/40 backdrop-blur-md border-t border-white/10 px-2.5 py-2">
-                        <span className="block text-xs font-semibold text-white/70 leading-snug line-clamp-1 text-center">
+                      <div className="absolute inset-x-0 bottom-0 border-t border-white/10 bg-black/40 px-2.5 py-2 backdrop-blur-md">
+                        <span className="line-clamp-1 block text-center text-xs leading-snug font-semibold text-white/70">
                           {slot.title}
                         </span>
                       </div>
@@ -200,10 +238,10 @@ export function SlotPicker({ slots, isOwner, label, hrefPrefix, onSave, onSearch
                   )}
 
                   {editing && (
-                    <div className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 transition-opacity group-hover:opacity-100">
                       <button
                         onClick={(e) => handleRemove(slot.position, e)}
-                        className="absolute top-1.5 right-1.5 w-5 h-5 rounded-full bg-black/70 flex items-center justify-center text-white/60 hover:text-white transition-colors"
+                        className="absolute top-1.5 right-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-black/70 text-white/60 transition-colors hover:text-white"
                       >
                         <X size={10} />
                       </button>
@@ -212,7 +250,7 @@ export function SlotPicker({ slots, isOwner, label, hrefPrefix, onSave, onSearch
                   )}
                 </>
               ) : (
-                <div className="w-full h-full flex items-center justify-center">
+                <div className="flex h-full w-full items-center justify-center">
                   {editing ? (
                     <span className="text-silver-dim/40 text-xl font-light">+</span>
                   ) : (
@@ -226,20 +264,18 @@ export function SlotPicker({ slots, isOwner, label, hrefPrefix, onSave, onSearch
       </div>
 
       {editing && activeSlot !== null && (
-        <div className="mt-4 bg-bg-card border border-border rounded-xl p-4">
-          <p className="text-xs text-silver-dim mb-3">Slot #{activeSlot}</p>
+        <div className="bg-bg-card border-border mt-4 rounded-xl border p-4">
+          <p className="text-silver-dim mb-3 text-xs">Slot #{activeSlot}</p>
           <input
             ref={searchRef}
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Procurar jogo..."
-            className="w-full rounded-md border border-border bg-bg px-3 py-2 text-sm text-silver placeholder:text-silver-dim/50 focus:outline-none focus:ring-1 focus:ring-white/20"
+            className="border-border bg-bg text-silver placeholder:text-silver-dim/50 w-full rounded-md border px-3 py-2 text-sm focus:ring-1 focus:ring-white/20 focus:outline-none"
           />
 
-          {searching && (
-            <p className="text-xs text-silver-dim/50 mt-3 pl-1">A procurar...</p>
-          )}
+          {searching && <p className="text-silver-dim/50 mt-3 pl-1 text-xs">A procurar...</p>}
 
           {!searching && results.length > 0 && (
             <div className="mt-3 space-y-1">
@@ -248,21 +284,28 @@ export function SlotPicker({ slots, isOwner, label, hrefPrefix, onSave, onSearch
                   key={r.slug}
                   onClick={() => handleSelect(r)}
                   disabled={isPending}
-                  className="w-full flex items-center gap-3 rounded-lg px-2 py-2 hover:bg-white/5 transition-colors text-left"
+                  className="flex w-full items-center gap-3 rounded-lg px-2 py-2 text-left transition-colors hover:bg-white/5"
                 >
-                  <div className="w-8 h-11 rounded shrink-0 overflow-hidden bg-bg border border-border relative">
+                  <div className="bg-bg border-border relative h-11 w-8 shrink-0 overflow-hidden rounded border">
                     {r.coverUrl && (
-                      <Image src={r.coverUrl} alt={r.title} fill sizes="32px" className="object-cover" unoptimized />
+                      <Image
+                        src={r.coverUrl}
+                        alt={r.title}
+                        fill
+                        sizes="32px"
+                        className="object-cover"
+                        unoptimized
+                      />
                     )}
                   </div>
-                  <span className="text-sm text-silver truncate">{r.title}</span>
+                  <span className="text-silver truncate text-sm">{r.title}</span>
                 </button>
               ))}
             </div>
           )}
 
           {!searching && query.trim() && results.length === 0 && (
-            <p className="text-xs text-silver-dim/50 mt-3 pl-1">Nenhum resultado.</p>
+            <p className="text-silver-dim/50 mt-3 pl-1 text-xs">Nenhum resultado.</p>
           )}
         </div>
       )}

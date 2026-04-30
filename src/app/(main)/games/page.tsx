@@ -39,10 +39,10 @@ export default async function GamesPage({
   const pages = buildPageNumbers(page, totalPages);
 
   return (
-    <div className="max-w-5xl mx-auto px-4 py-12">
+    <div className="mx-auto max-w-5xl px-4 py-12">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-silver">Games</h1>
-        <p className="mt-1 text-silver-dim">
+        <h1 className="text-silver text-3xl font-bold">Games</h1>
+        <p className="text-silver-dim mt-1">
           {q
             ? `Top ${games.length} resultados para "${q}"`
             : `${total.toLocaleString("pt-BR")} jogos encontrados`}
@@ -59,9 +59,9 @@ export default async function GamesPage({
         </div>
       )}
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {games.map((game) => (
-          <GameCard key={game.id} game={game} />
+          <GameCard key={game.slug} game={game} />
         ))}
       </div>
 
@@ -86,7 +86,7 @@ export default async function GamesPage({
                       {p}
                     </PaginationLink>
                   </PaginationItem>
-                )
+                ),
               )}
 
               {page < totalPages && (
