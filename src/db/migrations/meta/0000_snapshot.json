@@ -1,5 +1,5 @@
 {
-  "id": "bc0110dc-5570-417a-8d1f-8821ba498c42",
+  "id": "099483a9-7271-48ab-8d07-0c4a6a58eb22",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -24,7 +24,7 @@
           "name": "rank",
           "type": "integer",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "created_at": {
           "name": "created_at",
@@ -64,21 +64,21 @@
         }
       },
       "compositePrimaryKeys": {
-        "favorites_user_id_rank_pk": {
-          "name": "favorites_user_id_rank_pk",
+        "favorites_user_id_game_slug_pk": {
+          "name": "favorites_user_id_game_slug_pk",
           "columns": [
             "user_id",
-            "rank"
+            "game_slug"
           ]
         }
       },
       "uniqueConstraints": {
-        "favorites_user_id_game_slug_unique": {
-          "name": "favorites_user_id_game_slug_unique",
+        "favorites_user_id_rank_unique": {
+          "name": "favorites_user_id_rank_unique",
           "nullsNotDistinct": false,
           "columns": [
             "user_id",
-            "game_slug"
+            "rank"
           ]
         }
       },
@@ -86,7 +86,7 @@
       "checkConstraints": {
         "rank_limit": {
           "name": "rank_limit",
-          "value": "\"favorites\".\"rank\" >= 1 AND \"favorites\".\"rank\" <= 5"
+          "value": "\"favorites\".\"rank\" IS NULL OR (\"favorites\".\"rank\" >= 1 AND \"favorites\".\"rank\" <= 5)"
         }
       },
       "isRLSEnabled": false

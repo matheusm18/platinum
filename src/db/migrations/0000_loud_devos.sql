@@ -2,11 +2,11 @@ CREATE TYPE "public"."game_status" AS ENUM('playing', 'completed', 'want_to_play
 CREATE TABLE "favorites" (
 	"user_id" uuid NOT NULL,
 	"game_slug" varchar(255) NOT NULL,
-	"rank" integer NOT NULL,
+	"rank" integer,
 	"created_at" timestamp DEFAULT now() NOT NULL,
-	CONSTRAINT "favorites_user_id_rank_pk" PRIMARY KEY("user_id","rank"),
-	CONSTRAINT "favorites_user_id_game_slug_unique" UNIQUE("user_id","game_slug"),
-	CONSTRAINT "rank_limit" CHECK ("favorites"."rank" >= 1 AND "favorites"."rank" <= 5)
+	CONSTRAINT "favorites_user_id_game_slug_pk" PRIMARY KEY("user_id","game_slug"),
+	CONSTRAINT "favorites_user_id_rank_unique" UNIQUE("user_id","rank"),
+	CONSTRAINT "rank_limit" CHECK ("favorites"."rank" IS NULL OR ("favorites"."rank" >= 1 AND "favorites"."rank" <= 5))
 );
 --> statement-breakpoint
 CREATE TABLE "follows" (

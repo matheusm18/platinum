@@ -105,13 +105,13 @@ export const favorites = pgTable(
     gameSlug: varchar("game_slug", { length: 255 })
       .notNull()
       .references(() => games.slug, { onDelete: "cascade" }),
-    rank: integer("rank").notNull(),
+    rank: integer("rank"),
     createdAt: timestamp("created_at").notNull().defaultNow(),
   },
   (table) => [
-    primaryKey({ columns: [table.userId, table.rank] }),
-    unique().on(table.userId, table.gameSlug),
-    check("rank_limit", sql`${table.rank} >= 1 AND ${table.rank} <= 5`),
+    primaryKey({ columns: [table.userId, table.gameSlug] }),
+    unique().on(table.userId, table.rank),
+    check("rank_limit", sql`${table.rank} IS NULL OR (${table.rank} >= 1 AND ${table.rank} <= 5)`),
   ],
 );
 
