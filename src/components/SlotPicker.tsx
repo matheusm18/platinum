@@ -7,7 +7,6 @@ import { rawgResize } from "@/lib/utils";
 import { Pencil, X, Check } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { clsx } from "clsx";
-import { Button } from "./ui/button";
 
 export type Slot = {
   position: number;
@@ -64,15 +63,15 @@ export function SlotPicker({
   }, [activeSlot]);
 
   useEffect(() => {
+    if (activeSlot === null) return;
+
     if (debounceRef.current) clearTimeout(debounceRef.current);
 
     debounceRef.current = setTimeout(async () => {
-      if (!query.trim()) {
-        setResults([]);
-        return;
-      }
       setSearching(true);
+
       const res = await onSearch(query);
+
       setResults(res);
       setSearching(false);
     }, 400);
@@ -80,7 +79,7 @@ export function SlotPicker({
     return () => {
       if (debounceRef.current) clearTimeout(debounceRef.current);
     };
-  }, [query, onSearch]);
+  }, [query, activeSlot, onSearch]);
 
   function handleSlotClick(position: number) {
     if (!editing) return;

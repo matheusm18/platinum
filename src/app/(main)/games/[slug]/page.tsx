@@ -5,11 +5,12 @@ import { rawgResize } from "@/lib/utils";
 import type { Metadata } from "next";
 import { getSession } from "@/lib/session";
 import { db } from "@/db";
-import { reviews } from "@/db/schema";
+import { favorites, reviews } from "@/db/schema";
 import { and, eq } from "drizzle-orm";
 import { RateForm } from "@/components/RateForm";
 import { saveReview, deleteReview } from "@/lib/actions/reviews";
 import { ScoreBadge } from "@/components/ui/ScoreBadge";
+import { FavoriteButton } from "@/components/FavoriteButton";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -27,10 +28,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function GamePage({ params }: Props) {
   const { slug } = await params;
 
-  const [game, session] = await Promise.all([
-    getGameWithMirror(slug),
-    getSession(),
-  ]);
+  const [game, session] = await Promise.all([getGameWithMirror(slug), getSession()]);
 
   const existingReview = session?.user?.id
     ? await db
@@ -41,12 +39,21 @@ export default async function GamePage({ params }: Props) {
         .then((r) => r[0] ?? null)
     : null;
 
+  const existingFavorite = session?.user?.id
+    ? await db
+        .select()
+        .from(favorites)
+        .where(and(eq(favorites.userId, session.user.id), eq(favorites.gameSlug, slug)))
+        .limit(1)
+        .then((r) => r[0] ?? null)
+    : null;
+
   const boundSaveReview = saveReview.bind(null, slug);
   const boundDeleteReview = deleteReview.bind(null, slug);
 
   return (
     <div>
-      <div className="relative h-72 w-full bg-bg-card">
+      <div className="bg-bg-card relative h-72 w-full">
         {game.coverUrl && (
           <Image
             src={rawgResize(game.coverUrl, 1280)}
@@ -58,31 +65,41 @@ export default async function GamePage({ params }: Props) {
             unoptimized
           />
         )}
-        <div className="absolute inset-0 bg-linear-to-t from-bg via-bg/60 to-transparent" />
+        <div className="from-bg via-bg/60 absolute inset-0 bg-linear-to-t to-transparent" />
 
-        <div className="absolute bottom-0 left-0 right-0 max-w-5xl mx-auto px-4 pb-6 flex items-end justify-between">
+        <div className="absolute right-0 bottom-0 left-0 mx-auto flex max-w-5xl items-end justify-between px-4 pb-6">
           <div>
             <h1 className="text-4xl font-bold text-white">{game.title}</h1>
-            <p className="mt-2 text-silver-dim">{game.releaseYear}</p>
-            <div className="flex flex-wrap mt-2 gap-2">
+            <p className="text-silver-dim mt-2">{game.releaseYear}</p>
+            <div className="mt-2 flex flex-wrap gap-2">
               {game.genres?.map((genre) => (
                 <Badge key={genre}>{genre}</Badge>
               ))}
             </div>
+            <FavoriteButton
+              gameSlug={slug}
+              gameTitle={game.title}
+              isFavorite={!!existingFavorite}
+            />
           </div>
-          {game.averageScore !== null && <ScoreCircle score={game.averageScore} />}
+          {game.averageScore !== null && (
+            <ScoreBadge
+              score={game.averageScore}
+              className="h-16 w-16 rounded-full px-0 py-0 text-xl"
+            />
+          )}
         </div>
       </div>
 
-      <div className="max-w-5xl mx-auto px-4 py-8 space-y-8">
+      <div className="mx-auto max-w-5xl space-y-8 px-4 py-8">
         {game.description && (
           <div>
-            <h2 className="text-lg font-semibold text-silver mb-2">Sobre</h2>
+            <h2 className="text-silver mb-2 text-lg font-semibold">Sobre</h2>
             <p className="text-silver-dim leading-relaxed">{game.description}</p>
           </div>
         )}
 
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 border-t border-border pt-6">
+        <div className="border-border grid grid-cols-2 gap-6 border-t pt-6 sm:grid-cols-4">
           <MetaItem label="Desenvolvedora" values={game.developers ?? []} />
           <MetaItem label="Publicadora" values={game.publishers ?? []} />
           <MetaItem label="Plataformas" values={game.platforms?.slice(0, 4) ?? []} />
@@ -102,17 +119,13 @@ export default async function GamePage({ params }: Props) {
   );
 }
 
-function ScoreCircle({ score }: { score: number }) {
-  return <ScoreBadge score={score} className="w-16 h-16 rounded-full text-xl px-0 py-0" />;
-}
-
 function MetaItem({ label, values }: { label: string; values: string[] }) {
   if (!values || values.length === 0) return null;
   return (
     <div>
-      <p className="text-xs text-silver-dim uppercase tracking-wide mb-1">{label}</p>
+      <p className="text-silver-dim mb-1 text-xs tracking-wide uppercase">{label}</p>
       {values.map((v) => (
-        <p key={v} className="text-sm text-silver">
+        <p key={v} className="text-silver text-sm">
           {v}
         </p>
       ))}

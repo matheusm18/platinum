@@ -9,7 +9,7 @@ import { UserAvatar } from "@/components/UserAvatar";
 import { Button } from "@/components/ui/button";
 import { ReviewCard } from "@/components/ReviewCard";
 import { SlotPicker, type Slot } from "@/components/SlotPicker";
-import { updateFavorite, searchGamesAction } from "@/lib/actions/favorites";
+import { updateFavorite, searchGamesAction, searchFavoriteGames } from "@/lib/actions/favorites";
 import { updatePlayQueue } from "@/lib/actions/playQueue";
 import { FollowButton } from "@/components/FollowButton";
 
@@ -190,7 +190,7 @@ export default async function ProfilePage({ params }: Props) {
         buttonHref={`/users/${user.username}/favorites`}
         hrefPrefix="/games/"
         onSave={updateFavorite}
-        onSearch={searchGamesAction}
+        onSearch={searchFavoriteGames}
       />
 
       <SlotPicker
