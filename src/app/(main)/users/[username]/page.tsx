@@ -129,7 +129,7 @@ export default async function ProfilePage({ params }: Props) {
             <p className="text-silver-dim mt-1 text-sm">Membro desde {joinedDate}</p>
             {user.bio && <p className="text-silver mt-1 max-w-sm text-sm">{user.bio}</p>}
 
-            <div className="w-full md:w-auto">
+            <div className="mt w-full md:w-auto">
               {isOwner ? (
                 <Button
                   asChild
@@ -186,6 +186,8 @@ export default async function ProfilePage({ params }: Props) {
         slots={favoriteSlots}
         isOwner={isOwner}
         label="Jogos favoritos"
+        buttonText="Ver mais →"
+        buttonHref={`/users/${user.username}/favorites`}
         hrefPrefix="/games/"
         onSave={updateFavorite}
         onSearch={searchGamesAction}

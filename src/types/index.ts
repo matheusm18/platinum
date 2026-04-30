@@ -11,12 +11,11 @@ export type User = UserPublic & {
 };
 
 export type Game = {
-  id: string;
   slug: string;
   title: string;
   coverUrl: string;
-  genres: string[];
-  releaseYear: number;
+  genres: string[] | null;
+  releaseYear: number | null;
   averageScore: number | null;
 };
 
