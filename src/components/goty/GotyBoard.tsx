@@ -48,8 +48,10 @@ export function GotyBoard({
     ),
   );
 
-  const ranking = rankings[activeYear.year] ?? Array(slotCount).fill(null);
   const nomineeBySlug = new Map(activeYear.nominees.map((nominee) => [nominee.slug, nominee]));
+  const ranking = (rankings[activeYear.year] ?? Array(slotCount).fill(null)).map((slug) =>
+    slug && nomineeBySlug.has(slug) ? slug : null,
+  );
   const usedSlugs = new Set(ranking.filter(Boolean));
   const winner = activeYear.nominees.find((nominee) => nominee.officialWinner);
   const isCurrentYearPinned = pinnedYears.has(activeYear.year);

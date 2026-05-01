@@ -516,7 +516,7 @@ export const gotyYears: GotyYear[] = [
     defaultRanking: [
       "dragon-age-inquisition",
       "bayonetta-2",
-      "middle-earth-shadow-of-mordor",
+      "shadow-of-mordor",
       "dark-souls-ii",
       "hearthstone",
     ],
