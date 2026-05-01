@@ -18,6 +18,122 @@ export type GotyYear = {
 
 export const gotyYears: GotyYear[] = [
   {
+    year: 2025,
+    eventName: "The Game Awards",
+    tagline:
+      "Um ano forte para RPGs, sequelas aguardadas e regressos indie que finalmente chegaram.",
+    defaultRanking: [
+      "clair-obscur-expedition-33",
+      "hollow-knight-silksong",
+      "hades-ii",
+      "death-stranding-2",
+      "kingdom-come-deliverance-ii",
+    ],
+    nominees: [
+      {
+        slug: "clair-obscur-expedition-33",
+        title: "Clair Obscur: Expedition 33",
+        studio: "Sandfall Interactive",
+        accent: "#c9a46b",
+        genres: ["RPG", "JRPG"],
+        officialWinner: true,
+      },
+      {
+        slug: "death-stranding-2",
+        title: "Death Stranding 2: On the Beach",
+        studio: "Kojima Productions",
+        accent: "#7f9fb5",
+        genres: ["Adventure", "Sci-fi"],
+      },
+      {
+        slug: "donkey-kong-bananza",
+        title: "Donkey Kong Bananza",
+        studio: "Nintendo EPD",
+        accent: "#d7a13a",
+        genres: ["Adventure", "Platformer"],
+      },
+      {
+        slug: "hades-ii",
+        title: "Hades II",
+        studio: "Supergiant Games",
+        accent: "#6fbf9a",
+        genres: ["Roguelike", "Action"],
+      },
+      {
+        slug: "hollow-knight-silksong",
+        title: "Hollow Knight: Silksong",
+        studio: "Team Cherry",
+        accent: "#c84d65",
+        genres: ["Metroidvania", "Platformer"],
+      },
+      {
+        slug: "kingdom-come-deliverance-ii",
+        title: "Kingdom Come: Deliverance II",
+        studio: "Warhorse Studios",
+        accent: "#9b7a4e",
+        genres: ["RPG", "Historical"],
+      },
+    ],
+  },
+  {
+    year: 2024,
+    eventName: "The Game Awards",
+    tagline:
+      "Plataformas de precisão, fantasia sombria, cartas viciantes e RPGs enormes dividiram o topo.",
+    defaultRanking: [
+      "astro-bot",
+      "final-fantasy-vii-rebirth",
+      "metaphor-refantazio",
+      "balatro",
+      "black-myth-wu-kong",
+    ],
+    nominees: [
+      {
+        slug: "astro-bot",
+        title: "Astro Bot",
+        studio: "Team ASOBI",
+        accent: "#55a7e0",
+        genres: ["Platformer", "Adventure"],
+        officialWinner: true,
+      },
+      {
+        slug: "balatro",
+        title: "Balatro",
+        studio: "LocalThunk",
+        accent: "#d14d8b",
+        genres: ["Card game", "Roguelike"],
+      },
+      {
+        slug: "black-myth-wu-kong",
+        title: "Black Myth: Wukong",
+        studio: "Game Science",
+        accent: "#b88a4c",
+        genres: ["Action RPG", "Mythology"],
+      },
+      {
+        slug: "elden-ring-shadow-of-the-erdtree",
+        title: "Elden Ring: Shadow of the Erdtree",
+        studio: "FromSoftware",
+        accent: "#c69b4a",
+        genres: ["Action RPG", "Soulslike"],
+      },
+      {
+        slug: "final-fantasy-vii-rebirth",
+        title: "Final Fantasy VII Rebirth",
+        studio: "Square Enix",
+        accent: "#7da4c7",
+        genres: ["JRPG", "Action"],
+      },
+      {
+        slug: "metaphor-refantazio",
+        title: "Metaphor: ReFantazio",
+        studio: "Studio Zero",
+        accent: "#df4f42",
+        genres: ["JRPG", "Fantasy"],
+      },
+    ],
+  },
+  {
     year: 2023,
     eventName: "The Game Awards",
     tagline: "Um ano de escolhas impossíveis, RPGs enormes, terror em grande forma e Nintendo no seu melhor.",
