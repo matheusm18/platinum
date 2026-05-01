@@ -4,6 +4,7 @@ import {
   varchar,
   text,
   integer,
+  boolean,
   timestamp,
   unique,
   check,
@@ -134,5 +135,38 @@ export const playQueue = pgTable(
       "position_limit",
       sql`${table.position} IS NULL OR (${table.position} >= 1 AND ${table.position} <= 5)`,
     ),
+  ],
+);
+
+export const userGotyRankings = pgTable(
+  "user_goty_rankings",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userId: uuid("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    year: integer("year").notNull(),
+    isPinned: boolean("is_pinned").notNull().default(false),
+    createdAt: timestamp("created_at").notNull().defaultNow(),
+    updatedAt: timestamp("updated_at").notNull().defaultNow(),
+  },
+  (table) => [unique().on(table.userId, table.year)],
+);
+
+export const userGotyRankingItems = pgTable(
+  "user_goty_ranking_items",
+  {
+    rankingId: uuid("ranking_id")
+      .notNull()
+      .references(() => userGotyRankings.id, { onDelete: "cascade" }),
+    gameSlug: varchar("game_slug", { length: 255 })
+      .notNull()
+      .references(() => games.slug, { onDelete: "cascade" }),
+    rank: integer("rank").notNull(),
+  },
+  (table) => [
+    primaryKey({ columns: [table.rankingId, table.gameSlug] }),
+    unique().on(table.rankingId, table.rank),
+    check("goty_rank_limit", sql`${table.rank} >= 1 AND ${table.rank} <= 5`),
   ],
 );

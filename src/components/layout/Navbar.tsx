@@ -53,6 +53,15 @@ export async function Navbar() {
             Games
           </Link>
 
+          {session && (
+            <Link
+              href="/goty"
+              className="text-silver-dim hover:text-silver hover:bg-bg-card rounded-md px-3 py-1.5 text-sm transition-colors"
+            >
+              GOTY
+            </Link>
+          )}
+
           <div className="bg-border mx-2 h-4 w-px" />
 
           {session ? (

@@ -12,6 +12,8 @@ import { SlotPicker, type Slot } from "@/components/SlotPicker";
 import { updateFavorite, searchFavoriteGames } from "@/lib/actions/favorites";
 import { searchQueuedGames, updatePlayQueue } from "@/lib/actions/playQueue";
 import { FollowButton } from "@/components/FollowButton";
+import { GotyProfileCard } from "@/components/goty/GotyProfileCard";
+import { getPinnedGotyRankings } from "@/lib/actions/goty";
 
 type Props = { params: Promise<{ username: string }> };
 
@@ -45,6 +47,7 @@ export default async function ProfilePage({ params }: Props) {
     [{ followerCount }],
     [{ followingCount }],
     followRow,
+    pinnedGotyRankings,
   ] = await Promise.all([
     db
       .select({ review: reviews, game: games })
@@ -87,6 +90,7 @@ export default async function ProfilePage({ params }: Props) {
           .where(and(eq(follows.followerId, session.user.id), eq(follows.followingId, user.id)))
           .limit(1)
       : Promise.resolve([]),
+    getPinnedGotyRankings(user.id),
   ]);
 
   const isFollowing = followRow && followRow.length > 0;
@@ -203,6 +207,15 @@ export default async function ProfilePage({ params }: Props) {
         onSave={updatePlayQueue}
         onSearch={searchQueuedGames}
       />
+
+      {pinnedGotyRankings.map((ranking) => (
+        <GotyProfileCard
+          key={ranking.year}
+          year={ranking.year}
+          items={ranking.items}
+          isOwner={isOwner}
+        />
+      ))}
 
       <section>
         <div className="mb-4 flex items-baseline justify-between">

@@ -181,85 +181,93 @@ export function SlotPicker({
         </div>
       </div>
 
-      <div className="flex gap-3">
-        {localSlots.map((slot) => {
-          const isActive = activeSlot === slot.position;
-          const hasCover = slot.slug && slot.coverUrl;
+      <div className="border-border bg-bg-card/30 rounded-lg border p-3">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-5">
+          {localSlots.map((slot) => {
+            const isActive = activeSlot === slot.position;
+            const hasCover = slot.slug && slot.coverUrl;
 
-          return (
-            <div
-              key={slot.position}
-              onClick={() => handleSlotClick(slot.position)}
-              className={clsx([
-                "bg-bg-card group relative aspect-2/3 flex-1 overflow-hidden rounded-lg border",
-                editing ? "cursor-pointer" : "",
-                isActive ? "border-white/30 ring-1 ring-white/10" : "border-border",
-              ])}
-            >
-              {hasCover ? (
-                <>
-                  {editing ? (
-                    <>
-                      <Image
-                        src={rawgResize(slot.coverUrl!, 640)}
-                        alt={slot.title ?? ""}
-                        fill
-                        sizes="(max-width: 768px) 25vw, 150px"
-                        className="object-cover"
-                        unoptimized
-                      />
-                      <div className="absolute inset-x-0 bottom-0 border-t border-white/10 bg-black/40 px-2.5 py-2 backdrop-blur-md">
-                        <span className="line-clamp-1 block text-center text-xs leading-snug font-semibold text-white/70">
-                          {slot.title}
-                        </span>
-                      </div>
-                    </>
-                  ) : (
-                    <Link
-                      href={`${hrefPrefix}${slot.slug}`}
-                      className="relative block h-full w-full"
-                    >
-                      <Image
-                        src={rawgResize(slot.coverUrl!, 640)}
-                        alt={slot.title ?? ""}
-                        fill
-                        sizes="(max-width: 768px) 25vw, 150px"
-                        className="object-cover transition-transform duration-500 ease-out group-hover:scale-110"
-                        unoptimized
-                      />
-
-                      <div className="absolute inset-x-0 bottom-0 border-t border-white/10 bg-black/40 px-2.5 py-2 backdrop-blur-md">
-                        <span className="line-clamp-1 block text-center text-xs leading-snug font-semibold text-white/70">
-                          {slot.title}
-                        </span>
-                      </div>
-                    </Link>
-                  )}
-
-                  {editing && (
-                    <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 transition-opacity group-hover:opacity-100">
-                      <button
-                        onClick={(e) => handleRemove(slot.position, e)}
-                        className="absolute top-1.5 right-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-black/70 text-white/60 transition-colors hover:text-white"
+            return (
+              <div
+                key={slot.position}
+                onClick={() => handleSlotClick(slot.position)}
+                className={clsx([
+                  "bg-bg group relative aspect-2/3 overflow-hidden rounded-lg border",
+                  editing ? "cursor-pointer" : "",
+                  isActive ? "border-white/30 ring-1 ring-white/10" : "border-border",
+                ])}
+              >
+                {hasCover ? (
+                  <>
+                    {editing ? (
+                      <>
+                        <Image
+                          src={rawgResize(slot.coverUrl!, 640)}
+                          alt={slot.title ?? ""}
+                          fill
+                          sizes="(max-width: 768px) 25vw, 150px"
+                          className="object-cover"
+                          unoptimized
+                        />
+                        <div className="absolute inset-x-0 bottom-0 border-t border-white/10 bg-black/55 px-3 py-3 backdrop-blur-md">
+                          <p className="text-[10px] font-black tracking-widest text-white/45 uppercase">
+                            #{slot.position}
+                          </p>
+                          <span className="mt-1 line-clamp-2 block text-sm leading-tight font-black text-white">
+                            {slot.title}
+                          </span>
+                        </div>
+                      </>
+                    ) : (
+                      <Link
+                        href={`${hrefPrefix}${slot.slug}`}
+                        className="relative block h-full w-full"
                       >
-                        <X size={10} />
-                      </button>
-                      <Pencil size={14} className="text-white/80" />
-                    </div>
-                  )}
-                </>
-              ) : (
-                <div className="flex h-full w-full items-center justify-center">
-                  {editing ? (
-                    <span className="text-silver-dim/40 text-xl font-light">+</span>
-                  ) : (
-                    <span className="text-border text-xl font-bold">{slot.position}</span>
-                  )}
-                </div>
-              )}
-            </div>
-          );
-        })}
+                        <Image
+                          src={rawgResize(slot.coverUrl!, 640)}
+                          alt={slot.title ?? ""}
+                          fill
+                          sizes="(max-width: 768px) 25vw, 150px"
+                          className="object-cover transition-transform duration-500 ease-out group-hover:scale-110"
+                          unoptimized
+                        />
+
+                        <div className="absolute inset-x-0 bottom-0 border-t border-white/10 bg-black/55 px-3 py-3 backdrop-blur-md">
+                          <p className="text-[10px] font-black tracking-widest text-white/45 uppercase">
+                            #{slot.position}
+                          </p>
+                          <span className="mt-1 line-clamp-2 block text-sm leading-tight font-black text-white">
+                            {slot.title}
+                          </span>
+                        </div>
+                      </Link>
+                    )}
+
+                    {editing && (
+                      <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 transition-opacity group-hover:opacity-100">
+                        <button
+                          onClick={(e) => handleRemove(slot.position, e)}
+                          className="absolute top-1.5 right-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-black/70 text-white/60 transition-colors hover:text-white"
+                        >
+                          <X size={10} />
+                        </button>
+                        <Pencil size={14} className="text-white/80" />
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <div className="flex h-full w-full items-center justify-center">
+                    {editing ? (
+                      <span className="text-silver-dim/40 text-xl font-light">+</span>
+                    ) : (
+                      <span className="text-border text-2xl font-black">#{slot.position}</span>
+                    )}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
       </div>
 
       {editing && activeSlot !== null && (

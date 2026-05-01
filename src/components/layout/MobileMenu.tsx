@@ -68,6 +68,16 @@ export function MobileMenu({ username }: Props) {
                 Games
               </Link>
 
+              {username && (
+                <Link
+                  href="/goty"
+                  onClick={() => setIsOpen(false)}
+                  className="text-silver-dim w-full py-4 text-center text-2xl font-semibold transition-colors hover:text-white"
+                >
+                  GOTY
+                </Link>
+              )}
+
               <div className="bg-border my-4 h-px w-16" />
 
               {username ? (
