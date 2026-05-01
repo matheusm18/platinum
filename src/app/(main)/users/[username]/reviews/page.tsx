@@ -41,8 +41,7 @@ export default async function PlayQueuePage({ params }: Props) {
       .from(reviews)
       .innerJoin(games, eq(reviews.gameSlug, games.slug))
       .where(eq(reviews.userId, user.id))
-      .orderBy(desc(reviews.updatedAt))
-      .limit(20),
+      .orderBy(desc(reviews.updatedAt)),
 
     session?.user?.id && !isOwner
       ? db

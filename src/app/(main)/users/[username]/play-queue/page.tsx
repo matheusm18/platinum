@@ -1,7 +1,7 @@
 import { eq, and, asc } from "drizzle-orm";
 import { getSession } from "@/lib/session";
 import { db } from "@/db";
-import { favorites, follows, games, playQueue, users } from "@/db/schema";
+import { follows, games, playQueue, users } from "@/db/schema";
 import { UserAvatar } from "@/components/UserAvatar";
 import { notFound, redirect } from "next/navigation";
 import { FollowButton } from "@/components/FollowButton";
