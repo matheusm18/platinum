@@ -33,7 +33,7 @@ export function FavoriteButton({ gameSlug, gameTitle, isFavorite }: Props) {
   return (
     <Button
       size="sm"
-      variant={isFavorite ? "outline" : "default"}
+      variant={isFavorite ? "ghost" : "ghost"}
       className={isFavorite ? "border-border bg-bg-card hover:bg-bg mt-3" : "mt-3"}
       onClick={handleClick}
       disabled={isPending}

@@ -5,12 +5,13 @@ import { rawgResize } from "@/lib/utils";
 import type { Metadata } from "next";
 import { getSession } from "@/lib/session";
 import { db } from "@/db";
-import { favorites, reviews } from "@/db/schema";
+import { favorites, playQueue, reviews } from "@/db/schema";
 import { and, eq } from "drizzle-orm";
 import { RateForm } from "@/components/RateForm";
 import { saveReview, deleteReview } from "@/lib/actions/reviews";
 import { ScoreBadge } from "@/components/ui/ScoreBadge";
 import { FavoriteButton } from "@/components/FavoriteButton";
+import { QueueButton } from "@/components/QueueButton";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -48,6 +49,15 @@ export default async function GamePage({ params }: Props) {
         .then((r) => r[0] ?? null)
     : null;
 
+  const existingQueueItem = session?.user?.id
+    ? await db
+        .select()
+        .from(playQueue)
+        .where(and(eq(playQueue.userId, session.user.id), eq(playQueue.gameSlug, slug)))
+        .limit(1)
+        .then((r) => r[0] ?? null)
+    : null;
+
   const boundSaveReview = saveReview.bind(null, slug);
   const boundDeleteReview = deleteReview.bind(null, slug);
 
@@ -76,11 +86,14 @@ export default async function GamePage({ params }: Props) {
                 <Badge key={genre}>{genre}</Badge>
               ))}
             </div>
-            <FavoriteButton
-              gameSlug={slug}
-              gameTitle={game.title}
-              isFavorite={!!existingFavorite}
-            />
+            <div className="mt-4 flex gap-4">
+              <FavoriteButton
+                gameSlug={slug}
+                gameTitle={game.title}
+                isFavorite={!!existingFavorite}
+              />
+              <QueueButton gameSlug={slug} gameTitle={game.title} isQueued={!!existingQueueItem} />
+            </div>
           </div>
           {game.averageScore !== null && (
             <ScoreBadge
