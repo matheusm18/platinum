@@ -124,12 +124,15 @@ export const playQueue = pgTable(
     gameSlug: varchar("game_slug", { length: 255 })
       .notNull()
       .references(() => games.slug, { onDelete: "cascade" }),
-    position: integer("position").notNull(),
+    position: integer("position"),
     createdAt: timestamp("created_at").notNull().defaultNow(),
   },
   (table) => [
-    primaryKey({ columns: [table.userId, table.position] }),
-    unique().on(table.userId, table.gameSlug),
-    check("position_limit", sql`${table.position} >= 1 AND ${table.position} <= 5`),
+    primaryKey({ columns: [table.userId, table.gameSlug] }),
+    unique().on(table.userId, table.position),
+    check(
+      "position_limit",
+      sql`${table.position} IS NULL OR (${table.position} >= 1 AND ${table.position} <= 5)`,
+    ),
   ],
 );

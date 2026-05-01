@@ -9,8 +9,8 @@ import { UserAvatar } from "@/components/UserAvatar";
 import { Button } from "@/components/ui/button";
 import { ReviewCard } from "@/components/ReviewCard";
 import { SlotPicker, type Slot } from "@/components/SlotPicker";
-import { updateFavorite, searchGamesAction, searchFavoriteGames } from "@/lib/actions/favorites";
-import { updatePlayQueue } from "@/lib/actions/playQueue";
+import { updateFavorite, searchFavoriteGames } from "@/lib/actions/favorites";
+import { searchQueuedGames, updatePlayQueue } from "@/lib/actions/playQueue";
 import { FollowButton } from "@/components/FollowButton";
 
 type Props = { params: Promise<{ username: string }> };
@@ -197,9 +197,11 @@ export default async function ProfilePage({ params }: Props) {
         slots={playQueueSlots}
         isOwner={isOwner}
         label="Quero jogar"
+        buttonText="Ver mais →"
+        buttonHref={`/users/${user.username}/play-queue`}
         hrefPrefix="/games/"
         onSave={updatePlayQueue}
-        onSearch={searchGamesAction}
+        onSearch={searchQueuedGames}
       />
 
       <section>
