@@ -63,7 +63,7 @@ export function ReviewCard({
           src={rawgResize(coverUrl, 420)}
           alt={title}
           fill
-          sizes={isLarge ? "128px" : "80px"}
+          sizes={isLarge ? "128px" : "30px"}
           className="object-cover"
           unoptimized
         />
@@ -95,7 +95,7 @@ export function ReviewCard({
           {content && (
             <p
               className={cn(
-                "text-silver-dim line-clamp-3 leading-relaxed sm:line-clamp-4",
+                "text-silver-dim line-clamp-4 leading-relaxed sm:line-clamp-5",
                 isLarge ? "text-base" : "text-sm",
               )}
             >
@@ -105,7 +105,7 @@ export function ReviewCard({
         </div>
 
         {createdAt && (
-          <div className="mt-4 flex justify-end sm:justify-start">
+          <div className="mt-4 flex justify-end">
             <p className="text-silver-dim text-xs tracking-widest uppercase opacity-40">
               {createdAt.toLocaleDateString("pt-PT", {
                 day: "numeric",

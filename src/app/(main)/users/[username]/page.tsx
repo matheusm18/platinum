@@ -205,10 +205,20 @@ export default async function ProfilePage({ params }: Props) {
       />
 
       <section>
-        <h2 className="text-silver-dim mb-4 text-xs font-semibold tracking-widest uppercase">
-          Avaliações recentes
-        </h2>
+        <div className="mb-4 flex items-baseline justify-between">
+          <h2 className="text-silver-dim text-xs font-semibold tracking-widest uppercase">
+            Avaliações recentes
+          </h2>
 
+          <div className="flex gap-4">
+            <Link
+              href={`/users/${user.username}/reviews`}
+              className="text-silver-dim text-xs font-medium transition-colors hover:text-white"
+            >
+              Ver mais →
+            </Link>
+          </div>
+        </div>
         {reviewsWithGames.length === 0 ? (
           <p className="text-silver-dim border-border rounded-xl border border-dashed py-10 text-center text-sm">
             Ainda sem avaliações.
