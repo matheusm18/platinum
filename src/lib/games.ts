@@ -1,7 +1,7 @@
 import { db } from "@/db";
 import { games } from "@/db/schema";
 import { eq } from "drizzle-orm";
-import { fetchGame } from "./rawg";
+import { fetchGame } from "./igdb";
 
 export async function getGameWithMirror(slug: string) {
   const localGame = await db.query.games.findFirst({

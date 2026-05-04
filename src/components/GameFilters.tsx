@@ -9,7 +9,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import type { Genre } from "@/lib/rawg";
+import type { Genre } from "@/lib/igdb";
 
 const SORT_OPTIONS = [
   { label: "Popularidade", value: "-added" },

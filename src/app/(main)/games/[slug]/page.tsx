@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { getGameWithMirror } from "@/lib/games";
-import { rawgResize } from "@/lib/utils";
+import { resizeCover } from "@/lib/utils";
 import type { Metadata } from "next";
 import { getSession } from "@/lib/session";
 import { db } from "@/db";
@@ -66,7 +66,7 @@ export default async function GamePage({ params }: Props) {
       <div className="bg-bg-card relative h-72 w-full">
         {game.coverUrl && (
           <Image
-            src={rawgResize(game.coverUrl, 1280)}
+            src={resizeCover(game.coverUrl, 1280)}
             alt={game.title}
             fill
             sizes="100vw"

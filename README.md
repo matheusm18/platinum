@@ -28,7 +28,7 @@ I've been into video games my whole life. At some point I wanted a place to actu
 
 ## Features
 
-- **Game library** - powered by the [RAWG API](https://rawg.io/apidocs), covering hundreds of thousands of titles
+- **Game library** - powered by the [IGDB API](https://api-docs.igdb.com), covering hundreds of thousands of titles
 - **Personal shelf** - split into Favorites, Currently Playing, and Want to Play
 - **Reviews & ratings** - write your thoughts on any game and browse what others are saying
 - **Following system** - connect with other gamers *(coming soon)*
@@ -48,7 +48,7 @@ I've been into video games my whole life. At some point I wanted a place to actu
 | Storage | Cloudflare R2 |
 | Validation | Zod |
 | Runtime | Bun |
-| Data | RAWG Video Games API |
+| Data | IGDB API |
 
 ---
 
@@ -66,7 +66,7 @@ bun install
 
 # Environment
 cp .env.example .env
-# Fill in your keys (RAWG API, database URL, NextAuth secret, Cloudflare R2 credentials)
+# Fill in your keys (IGDB client ID/secret, database URL, NextAuth secret, Cloudflare R2 credentials)
 
 # Run
 bun dev

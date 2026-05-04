@@ -2,7 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { ArrowDown, ArrowUp, X } from "lucide-react";
 import type { GotyNominee } from "@/lib/goty-data";
-import { rawgResize } from "@/lib/utils";
+import { resizeCover } from "@/lib/utils";
 import { PosterMark } from "@/components/goty/PosterMark";
 
 type Props = {
@@ -31,7 +31,7 @@ export function RankingSlot({
           <Link href={`/games/${nominee.slug}`} className="absolute inset-0">
             {nominee.coverUrl ? (
               <Image
-                src={rawgResize(nominee.coverUrl, 640)}
+                src={resizeCover(nominee.coverUrl, 640)}
                 alt={nominee.title}
                 fill
                 sizes="(max-width: 768px) 50vw, 150px"

@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { ScoreBadge } from "@/components/ui/ScoreBadge";
-import { rawgResize } from "@/lib/utils";
+import { resizeCover } from "@/lib/utils";
 import type { Game } from "@/types";
 
 type Props = {
@@ -13,10 +13,10 @@ export function GameCard({ game }: Props) {
   return (
     <Link href={`/games/${game.slug}`} className="group flex h-full flex-col">
       <div className="bg-bg-card border-border group-hover:border-purple flex h-full flex-col overflow-hidden rounded-lg border transition-colors">
-        <div className="relative aspect-video w-full">
+        <div className="relative aspect-[3/4] w-full">
           {game.coverUrl ? (
             <Image
-              src={rawgResize(game.coverUrl, 640)}
+              src={resizeCover(game.coverUrl, 640)}
               alt={`Capa de ${game.title}`}
               fill
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"

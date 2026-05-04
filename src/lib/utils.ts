@@ -5,8 +5,12 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function rawgResize(url: string, width: number): string {
+export function resizeCover(url: string, width: number): string {
   if (!url) return url;
+  if (url.includes("images.igdb.com")) {
+    const size = width >= 1000 ? "t_1080p" : width >= 500 ? "t_screenshot_big" : "t_cover_big";
+    return url.replace(/t_[^/]+/, size);
+  }
   return url.replace(
     "https://media.rawg.io/media/",
     `https://media.rawg.io/media/resize/${width}/-/`,

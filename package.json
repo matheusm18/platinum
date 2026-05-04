@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "sync-games": "bun run scripts/sync-games.ts"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1037.0",
