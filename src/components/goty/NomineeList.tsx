@@ -2,7 +2,7 @@ import { Check } from "lucide-react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import type { GotyNominee } from "@/lib/goty-data";
-import { rawgResize } from "@/lib/utils";
+import { resizeCover } from "@/lib/utils";
 import { PosterMark } from "@/components/goty/PosterMark";
 
 type Props = {
@@ -35,7 +35,7 @@ export function NomineeList({ nominees, usedSlugs, onAdd }: Props) {
               <div className="relative h-13 w-10 shrink-0 overflow-hidden rounded border border-white/10">
                 {nominee.coverUrl ? (
                   <Image
-                    src={rawgResize(nominee.coverUrl, 640)}
+                    src={resizeCover(nominee.coverUrl, 640)}
                     alt={nominee.title}
                     fill
                     sizes="40px"

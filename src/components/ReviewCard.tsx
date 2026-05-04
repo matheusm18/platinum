@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { cva, type VariantProps } from "class-variance-authority";
-import { cn, rawgResize } from "@/lib/utils";
+import { cn, resizeCover } from "@/lib/utils";
 import { ScoreBadge } from "@/components/ui/ScoreBadge";
 
 const cardVariants = cva(
@@ -60,7 +60,7 @@ export function ReviewCard({
     <div className={cn(cardVariants({ size }), className)}>
       <Link href={`/games/${gameSlug}`} className={imageVariants({ size })}>
         <Image
-          src={rawgResize(coverUrl, 420)}
+          src={resizeCover(coverUrl, 420)}
           alt={title}
           fill
           sizes={isLarge ? "128px" : "30px"}

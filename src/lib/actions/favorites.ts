@@ -7,8 +7,6 @@ import { and, asc, eq, ilike, isNotNull } from "drizzle-orm";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { getGameWithMirror } from "@/lib/games";
-import { fetchGames } from "../rawg";
-
 export async function favoriteGame(gameSlug: string) {
   const session = await auth();
   const userId = session?.user?.id;
@@ -121,16 +119,6 @@ export async function updateFavorite(rank: number, gameSlug: string | null) {
   }
 
   revalidatePath(`/games/${gameSlug}`);
-}
-
-export async function searchGamesAction(query: string) {
-  const { games } = await fetchGames(query, 1, undefined, undefined);
-
-  return games.slice(0, 6).map((game) => ({
-    slug: game.slug,
-    title: game.title,
-    coverUrl: game.coverUrl ?? "",
-  }));
 }
 
 export async function searchFavoriteGames(query: string) {

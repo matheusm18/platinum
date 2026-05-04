@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Pencil, Trophy } from "lucide-react";
 import { getGotyYear } from "@/lib/goty-data";
-import { rawgResize } from "@/lib/utils";
+import { resizeCover } from "@/lib/utils";
 import { PosterMark } from "@/components/goty/PosterMark";
 
 type GotyGame = {
@@ -60,7 +60,7 @@ export function GotyProfileCard({ year, items, isOwner }: Props) {
               >
                 {item.game?.coverUrl ? (
                   <Image
-                    src={rawgResize(item.game.coverUrl, 640)}
+                    src={resizeCover(item.game.coverUrl, 640)}
                     alt={title}
                     fill
                     sizes="(max-width: 768px) 50vw, 150px"

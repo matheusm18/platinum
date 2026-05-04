@@ -26,7 +26,7 @@ export const gotyYears: GotyYear[] = [
       "clair-obscur-expedition-33",
       "hollow-knight-silksong",
       "hades-ii",
-      "death-stranding-2",
+      "death-stranding-2-on-the-beach",
       "kingdom-come-deliverance-ii",
     ],
     nominees: [
@@ -39,7 +39,7 @@ export const gotyYears: GotyYear[] = [
         officialWinner: true,
       },
       {
-        slug: "death-stranding-2",
+        slug: "death-stranding-2-on-the-beach",
         title: "Death Stranding 2: On the Beach",
         studio: "Kojima Productions",
         accent: "#7f9fb5",
@@ -140,8 +140,8 @@ export const gotyYears: GotyYear[] = [
     defaultRanking: [
       "baldurs-gate-3",
       "alan-wake-2",
-      "the-legend-of-zelda-breath-of-the-wild-sequel",
-      "resident-evil-4-2023",
+      "the-legend-of-zelda-tears-of-the-kingdom",
+      "resident-evil-4",
       "marvels-spider-man-2",
     ],
     nominees: [
@@ -161,14 +161,14 @@ export const gotyYears: GotyYear[] = [
         genres: ["Horror", "Mystery"],
       },
       {
-        slug: "the-legend-of-zelda-breath-of-the-wild-sequel",
+        slug: "the-legend-of-zelda-tears-of-the-kingdom",
         title: "The Legend of Zelda: Tears of the Kingdom",
         studio: "Nintendo",
         accent: "#61b7ad",
         genres: ["Adventure", "Sandbox"],
       },
       {
-        slug: "resident-evil-4-2023",
+        slug: "resident-evil-4",
         title: "Resident Evil 4",
         studio: "Capcom",
         accent: "#8d9a8c",
@@ -197,7 +197,7 @@ export const gotyYears: GotyYear[] = [
     defaultRanking: [
       "elden-ring",
       "god-of-war-ragnarok",
-      "stray-2",
+      "stray",
       "a-plague-tale-requiem",
       "xenoblade-chronicles-3",
     ],
@@ -218,14 +218,14 @@ export const gotyYears: GotyYear[] = [
         genres: ["Action", "Adventure"],
       },
       {
-        slug: "horizon-zero-dawn-2",
+        slug: "horizon-forbidden-west",
         title: "Horizon Forbidden West",
         studio: "Guerrilla Games",
         accent: "#d66a36",
         genres: ["Open world", "RPG"],
       },
       {
-        slug: "stray-2",
+        slug: "stray",
         title: "Stray",
         studio: "BlueTwelve Studio",
         accent: "#f06b45",
@@ -252,15 +252,15 @@ export const gotyYears: GotyYear[] = [
     eventName: "The Game Awards",
     tagline: "Co-op com coração, loops temporais, plataformas de autor e terror de sobrevivência.",
     defaultRanking: [
-      "it-takes-two-2",
-      "deathloop-2",
+      "it-takes-two",
+      "deathloop",
       "psychonauts-2",
       "metroid-dread",
       "resident-evil-village",
     ],
     nominees: [
       {
-        slug: "it-takes-two-2",
+        slug: "it-takes-two",
         title: "It Takes Two",
         studio: "Hazelight Studios",
         accent: "#d98755",
@@ -268,7 +268,7 @@ export const gotyYears: GotyYear[] = [
         officialWinner: true,
       },
       {
-        slug: "deathloop-2",
+        slug: "deathloop",
         title: "Deathloop",
         studio: "Arkane Lyon",
         accent: "#e3c660",
@@ -310,7 +310,7 @@ export const gotyYears: GotyYear[] = [
     tagline:
       "Um ano de confinamento com drama de prestígio, rotina numa ilha, violência pesada e indies míticos.",
     defaultRanking: [
-      "hades-2018",
+      "hades",
       "the-last-of-us-part-2",
       "ghost-of-tsushima",
       "doom-eternal",
@@ -326,7 +326,7 @@ export const gotyYears: GotyYear[] = [
         officialWinner: true,
       },
       {
-        slug: "animal-crossing-2019",
+        slug: "animal-crossing-new-horizons",
         title: "Animal Crossing: New Horizons",
         studio: "Nintendo",
         accent: "#78c69f",
@@ -354,7 +354,7 @@ export const gotyYears: GotyYear[] = [
         genres: ["Open world", "Action"],
       },
       {
-        slug: "hades-2018",
+        slug: "hades",
         title: "Hades",
         studio: "Supergiant Games",
         accent: "#d64e39",
@@ -368,15 +368,15 @@ export const gotyYears: GotyYear[] = [
     tagline:
       "Um ano estranho e cheio de estilo, marcado por dificuldade, autoria e experiências single-player fortes.",
     defaultRanking: [
-      "shadows-die-twice",
+      "sekiro-shadows-die-twice",
       "control",
       "death-stranding",
-      "resident-evil-2-2019",
+      "resident-evil-2",
       "super-smash-bros-ultimate",
     ],
     nominees: [
       {
-        slug: "shadows-die-twice",
+        slug: "sekiro-shadows-die-twice",
         title: "Sekiro: Shadows Die Twice",
         studio: "FromSoftware",
         accent: "#c48145",
@@ -398,7 +398,7 @@ export const gotyYears: GotyYear[] = [
         genres: ["Adventure", "Sci-fi"],
       },
       {
-        slug: "resident-evil-2-2019",
+        slug: "resident-evil-2",
         title: "Resident Evil 2",
         studio: "Capcom",
         accent: "#476b7d",
@@ -425,15 +425,15 @@ export const gotyYears: GotyYear[] = [
     eventName: "The Game Awards",
     tagline: "Blockbusters de prestígio frente a indies precisos e mundos abertos gigantes.",
     defaultRanking: [
-      "god-of-war-2",
+      "god-of-war",
       "red-dead-redemption-2",
       "celeste",
       "marvels-spider-man",
-      "monster-hunter-world-2",
+      "monster-hunter-world",
     ],
     nominees: [
       {
-        slug: "god-of-war-2",
+        slug: "god-of-war",
         title: "God of War",
         studio: "Santa Monica Studio",
         accent: "#8fb3c9",
@@ -462,7 +462,7 @@ export const gotyYears: GotyYear[] = [
         genres: ["Action", "Open world"],
       },
       {
-        slug: "monster-hunter-world-2",
+        slug: "monster-hunter-world",
         title: "Monster Hunter: World",
         studio: "Capcom",
         accent: "#6e9b55",
@@ -632,7 +632,7 @@ export const gotyYears: GotyYear[] = [
     defaultRanking: [
       "dragon-age-inquisition",
       "bayonetta-2",
-      "shadow-of-mordor",
+      "middle-earth-shadow-of-mordor",
       "dark-souls-ii",
       "hearthstone",
     ],
@@ -667,7 +667,7 @@ export const gotyYears: GotyYear[] = [
         genres: ["Card game", "Strategy"],
       },
       {
-        slug: "shadow-of-mordor",
+        slug: "middle-earth-shadow-of-mordor",
         title: "Middle-earth: Shadow of Mordor",
         studio: "Monolith Productions",
         accent: "#73806f",

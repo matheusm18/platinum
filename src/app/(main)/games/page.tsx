@@ -1,7 +1,7 @@
 import { GameCard } from "@/components/GameCard";
 import { GameFilters } from "@/components/GameFilters";
 import { SearchInput } from "@/components/SearchInput";
-import { fetchGames, fetchGenres } from "@/lib/rawg";
+import { fetchGames, fetchGenres } from "@/lib/igdb";
 import {
   Pagination,
   PaginationContent,

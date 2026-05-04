@@ -3,7 +3,7 @@
 import { useState, useTransition, useRef, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { rawgResize } from "@/lib/utils";
+import { resizeCover } from "@/lib/utils";
 import { Pencil, X, Check } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { clsx } from "clsx";
@@ -202,7 +202,7 @@ export function SlotPicker({
                     {editing ? (
                       <>
                         <Image
-                          src={rawgResize(slot.coverUrl!, 640)}
+                          src={resizeCover(slot.coverUrl!, 640)}
                           alt={slot.title ?? ""}
                           fill
                           sizes="(max-width: 768px) 25vw, 150px"
@@ -224,7 +224,7 @@ export function SlotPicker({
                         className="relative block h-full w-full"
                       >
                         <Image
-                          src={rawgResize(slot.coverUrl!, 640)}
+                          src={resizeCover(slot.coverUrl!, 640)}
                           alt={slot.title ?? ""}
                           fill
                           sizes="(max-width: 768px) 25vw, 150px"
