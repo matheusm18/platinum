@@ -141,7 +141,7 @@ export const gotyYears: GotyYear[] = [
       "baldurs-gate-iii",
       "alan-wake-ii",
       "the-legend-of-zelda-tears-of-the-kingdom",
-      "resident-evil-4",
+      "resident-evil-4--1",
       "marvels-spider-man-2",
     ],
     nominees: [
@@ -168,7 +168,7 @@ export const gotyYears: GotyYear[] = [
         genres: ["Adventure", "Sandbox"],
       },
       {
-        slug: "resident-evil-4",
+        slug: "resident-evil-4--1",
         title: "Resident Evil 4",
         studio: "Capcom",
         accent: "#8d9a8c",
@@ -310,7 +310,7 @@ export const gotyYears: GotyYear[] = [
     tagline:
       "Um ano de confinamento com drama de prestígio, rotina numa ilha, violência pesada e indies míticos.",
     defaultRanking: [
-      "hades",
+      "hades--1",
       "the-last-of-us-part-ii",
       "ghost-of-tsushima",
       "doom-eternal",
@@ -354,7 +354,7 @@ export const gotyYears: GotyYear[] = [
         genres: ["Open world", "Action"],
       },
       {
-        slug: "hades",
+        slug: "hades--1",
         title: "Hades",
         studio: "Supergiant Games",
         accent: "#d64e39",
@@ -371,7 +371,7 @@ export const gotyYears: GotyYear[] = [
       "sekiro-shadows-die-twice",
       "control",
       "death-stranding",
-      "resident-evil-2",
+      "resident-evil-2--1",
       "super-smash-bros-ultimate",
     ],
     nominees: [
@@ -398,7 +398,7 @@ export const gotyYears: GotyYear[] = [
         genres: ["Adventure", "Sci-fi"],
       },
       {
-        slug: "resident-evil-2",
+        slug: "resident-evil-2--1",
         title: "Resident Evil 2",
         studio: "Capcom",
         accent: "#476b7d",
@@ -425,7 +425,7 @@ export const gotyYears: GotyYear[] = [
     eventName: "The Game Awards",
     tagline: "Blockbusters de prestígio frente a indies precisos e mundos abertos gigantes.",
     defaultRanking: [
-      "god-of-war",
+      "god-of-war--1",
       "red-dead-redemption-2",
       "celeste",
       "marvels-spider-man",
@@ -433,7 +433,7 @@ export const gotyYears: GotyYear[] = [
     ],
     nominees: [
       {
-        slug: "god-of-war",
+        slug: "god-of-war--1",
         title: "God of War",
         studio: "Santa Monica Studio",
         accent: "#8fb3c9",
