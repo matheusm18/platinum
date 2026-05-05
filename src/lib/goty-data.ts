@@ -85,7 +85,7 @@ export const gotyYears: GotyYear[] = [
       "final-fantasy-vii-rebirth",
       "metaphor-refantazio",
       "balatro",
-      "black-myth-wu-kong",
+      "black-myth-wukong",
     ],
     nominees: [
       {
@@ -104,7 +104,7 @@ export const gotyYears: GotyYear[] = [
         genres: ["Card game", "Roguelike"],
       },
       {
-        slug: "black-myth-wu-kong",
+        slug: "black-myth-wukong",
         title: "Black Myth: Wukong",
         studio: "Game Science",
         accent: "#b88a4c",
@@ -138,15 +138,15 @@ export const gotyYears: GotyYear[] = [
     eventName: "The Game Awards",
     tagline: "Um ano de escolhas impossíveis, RPGs enormes, terror em grande forma e Nintendo no seu melhor.",
     defaultRanking: [
-      "baldurs-gate-3",
-      "alan-wake-2",
+      "baldurs-gate-iii",
+      "alan-wake-ii",
       "the-legend-of-zelda-tears-of-the-kingdom",
       "resident-evil-4",
       "marvels-spider-man-2",
     ],
     nominees: [
       {
-        slug: "baldurs-gate-3",
+        slug: "baldurs-gate-iii",
         title: "Baldur's Gate 3",
         studio: "Larian Studios",
         accent: "#d7b46a",
@@ -154,7 +154,7 @@ export const gotyYears: GotyYear[] = [
         officialWinner: true,
       },
       {
-        slug: "alan-wake-2",
+        slug: "alan-wake-ii",
         title: "Alan Wake 2",
         studio: "Remedy Entertainment",
         accent: "#b83932",
@@ -289,7 +289,7 @@ export const gotyYears: GotyYear[] = [
         genres: ["Platformer", "Adventure"],
       },
       {
-        slug: "ratchet-clank-rift-apart",
+        slug: "ratchet-and-clank-rift-apart",
         title: "Ratchet & Clank: Rift Apart",
         studio: "Insomniac Games",
         accent: "#dd8e38",
@@ -311,14 +311,14 @@ export const gotyYears: GotyYear[] = [
       "Um ano de confinamento com drama de prestígio, rotina numa ilha, violência pesada e indies míticos.",
     defaultRanking: [
       "hades",
-      "the-last-of-us-part-2",
+      "the-last-of-us-part-ii",
       "ghost-of-tsushima",
       "doom-eternal",
       "final-fantasy-vii-remake",
     ],
     nominees: [
       {
-        slug: "the-last-of-us-part-2",
+        slug: "the-last-of-us-part-ii",
         title: "The Last of Us Part II",
         studio: "Naughty Dog",
         accent: "#66715e",
@@ -487,7 +487,7 @@ export const gotyYears: GotyYear[] = [
       "super-mario-odyssey",
       "persona-5",
       "horizon-zero-dawn",
-      "playerunknowns-battlegrounds",
+      "pubg-battlegrounds",
     ],
     nominees: [
       {
@@ -520,7 +520,7 @@ export const gotyYears: GotyYear[] = [
         genres: ["Open world", "Action RPG"],
       },
       {
-        slug: "playerunknowns-battlegrounds",
+        slug: "pubg-battlegrounds",
         title: "PlayerUnknown's Battlegrounds",
         studio: "PUBG Corporation",
         accent: "#c99b3a",
@@ -533,7 +533,7 @@ export const gotyYears: GotyYear[] = [
     eventName: "The Game Awards",
     tagline:
       "Um fenómeno multiplayer venceu um ano cheio de shooters, aventura de prestígio e indies refinados.",
-    defaultRanking: ["overwatch", "doom", "uncharted-4-a-thiefs-end", "inside", "titanfall-2"],
+    defaultRanking: ["overwatch", "doom", "uncharted-4-a-thief-s-end", "inside", "titanfall-2"],
     nominees: [
       {
         slug: "overwatch",
@@ -565,7 +565,7 @@ export const gotyYears: GotyYear[] = [
         genres: ["Shooter", "Sci-fi"],
       },
       {
-        slug: "uncharted-4-a-thiefs-end",
+        slug: "uncharted-4-a-thief-s-end",
         title: "Uncharted 4: A Thief's End",
         studio: "Naughty Dog",
         accent: "#8c6d48",
