@@ -95,7 +95,7 @@ export default async function PlayQueuePage({ params }: Props) {
           {playQueueItems.length === 0 ? (
             <p className="text-silver-dim">Nenhum jogo na fila encontrado.</p>
           ) : (
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
               {playQueueItems.map(({ queueItem, game }) => (
                 <GameCard key={`${queueItem.userId}-${queueItem.gameSlug}`} game={game} />
               ))}

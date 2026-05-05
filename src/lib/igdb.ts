@@ -58,10 +58,12 @@ type IgdbGame = {
   platforms?: { name: string }[];
   involved_companies?: { company: { name: string }; developer: boolean; publisher: boolean }[];
   websites?: { url: string; category: number }[];
+  screenshots?: { image_id: string }[];
+  artworks?: { image_id: string }[];
 };
 
 const LIST_FIELDS = `fields id,slug,name,first_release_date,cover.image_id,rating,aggregated_rating,genres.id,genres.name;`;
-const DETAIL_FIELDS = `fields id,slug,name,first_release_date,cover.image_id,rating,aggregated_rating,genres.id,genres.name,summary,platforms.name,involved_companies.company.name,involved_companies.developer,involved_companies.publisher,websites.url,websites.category;`;
+const DETAIL_FIELDS = `fields id,slug,name,first_release_date,cover.image_id,rating,aggregated_rating,genres.id,genres.name,summary,platforms.name,involved_companies.company.name,involved_companies.developer,involved_companies.publisher,websites.url,websites.category,screenshots.image_id,artworks.image_id;`;
 
 // Main games in IGDB have category = null; expansions/DLCs have explicit values
 const BASE_FILTER = `(category = null | category = (0,4,8,9))`;
@@ -76,7 +78,7 @@ const ORDERING_MAP: Record<string, string> = {
   "-metacritic": "aggregated_rating desc",
 };
 
-const PAGE_SIZE = 21;
+const PAGE_SIZE = 20;
 
 function scoreOf(raw: IgdbGame): number | null {
   const score = raw.aggregated_rating ?? raw.rating;
@@ -178,5 +180,9 @@ export async function fetchGame(slug: string): Promise<GameDetail> {
     publishers,
     playtime: null,
     website,
+    screenshotUrl:
+      igdbCoverUrl(raw.artworks?.[0]?.image_id, "t_1080p") ||
+      igdbCoverUrl(raw.screenshots?.[0]?.image_id, "t_1080p") ||
+      null,
   };
 }

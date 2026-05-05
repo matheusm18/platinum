@@ -8,7 +8,7 @@ export function cn(...inputs: ClassValue[]) {
 export function resizeCover(url: string, width: number): string {
   if (!url) return url;
   if (url.includes("images.igdb.com")) {
-    const size = width >= 1000 ? "t_1080p" : width >= 500 ? "t_screenshot_big" : "t_cover_big";
+    const size = width >= 400 ? "t_cover_big_2x" : "t_cover_big";
     return url.replace(/t_[^/]+/, size);
   }
   return url.replace(

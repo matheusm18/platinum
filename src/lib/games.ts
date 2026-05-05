@@ -30,6 +30,7 @@ export async function getGameWithMirror(slug: string) {
       publishers: remoteGame.publishers,
       playtime: remoteGame.playtime,
       website: remoteGame.website,
+      screenshotUrl: remoteGame.screenshotUrl,
       lastSyncedAt: new Date(),
     })
     .onConflictDoUpdate({
@@ -46,6 +47,7 @@ export async function getGameWithMirror(slug: string) {
         publishers: remoteGame.publishers,
         playtime: remoteGame.playtime,
         website: remoteGame.website,
+        screenshotUrl: remoteGame.screenshotUrl,
         lastSyncedAt: new Date(),
       },
     });

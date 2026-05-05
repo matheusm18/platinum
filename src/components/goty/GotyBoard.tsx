@@ -209,7 +209,7 @@ export function GotyBoard({
                 </button>
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-5">
+            <div className="grid grid-cols-5 gap-2">
               {ranking.map((slug, index) => {
                 const nominee = slug ? nomineeBySlug.get(slug) : null;
 

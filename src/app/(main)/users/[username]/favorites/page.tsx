@@ -95,7 +95,7 @@ export default async function FavoritesPage({ params }: Props) {
           {favoritesWithGames.length === 0 ? (
             <p className="text-silver-dim">Nenhum jogo favorito encontrado.</p>
           ) : (
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
               {favoritesWithGames.map(({ fav, game }) => (
                 <GameCard key={`${fav.userId}-${fav.gameSlug}`} game={game} />
               ))}

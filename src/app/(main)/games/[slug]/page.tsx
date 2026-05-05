@@ -64,9 +64,9 @@ export default async function GamePage({ params }: Props) {
   return (
     <div>
       <div className="bg-bg-card relative h-72 w-full">
-        {game.coverUrl && (
+        {(game.screenshotUrl ?? game.coverUrl) && (
           <Image
-            src={resizeCover(game.coverUrl, 1280)}
+            src={game.screenshotUrl ?? resizeCover(game.coverUrl, 1280)}
             alt={game.title}
             fill
             sizes="100vw"

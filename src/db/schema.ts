@@ -44,6 +44,7 @@ export const games = pgTable("games", {
   publishers: text("publishers").array(),
   playtime: integer("playtime"),
   website: text("website"),
+  screenshotUrl: text("screenshot_url"),
   lastSyncedAt: timestamp("last_synced_at").defaultNow(),
 });
 

@@ -20,7 +20,7 @@ const cardVariants = cva(
 );
 
 const imageVariants = cva(
-  "shrink-0 rounded-md overflow-hidden bg-bg border border-border relative w-full h-48 sm:h-28 sm:w-20",
+  "shrink-0 rounded-md overflow-hidden bg-bg border border-border relative w-full h-48 sm:h-40 sm:w-28",
   {
     variants: {
       size: {
@@ -63,7 +63,7 @@ export function ReviewCard({
           src={resizeCover(coverUrl, 420)}
           alt={title}
           fill
-          sizes={isLarge ? "128px" : "30px"}
+          sizes={isLarge ? "128px" : "112px"}
           className="object-cover"
           unoptimized
         />
@@ -86,7 +86,7 @@ export function ReviewCard({
               score={score * 10}
               normalized={true}
               className={cn(
-                "shrink-0 rounded px-2 py-0.5 font-mono font-bold",
+                "shrink-0 rounded px-2.5 py-1 font-mono font-bold",
                 isLarge ? "text-xl" : "text-lg",
               )}
             />

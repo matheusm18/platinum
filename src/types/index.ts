@@ -26,6 +26,7 @@ export type GameDetail = Game & {
   publishers: string[];
   playtime: number | null;
   website: string | null;
+  screenshotUrl: string | null;
 };
 
 export type Review = {
